@@ -1,6 +1,6 @@
 {
     "name": "postpay/module-postpay",
-    "description": "",
+    "description": "Postpay.io Integration for Magento 2",
     "type": "magento2-module",
     "license": "proprietary",
     "authors": [
