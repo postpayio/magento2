@@ -6,7 +6,8 @@
     "authors": [
         {
             "email": "info@devgenii.com",
-            "name": "DevGenii"
+            "name": "DevGenii",
+            "homepage": "https://devgenii.com/"
         }
     ],
     "minimum-stability": "dev",
