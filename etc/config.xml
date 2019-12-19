@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<!--
+Copyright © 2019 Postpay Technology Limited. All rights reserved.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <postpay>
+                <active>0</active>
+                <model>Postpay\Postpay\Model\Payment\Postpay</model>
+                <title>Postpay</title>
+                <sandbox>0</sandbox>
+                <merchant_id/>
+                <secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <sandbox_secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <product_widget>0</product_widget>
+                <cart_widget>0</cart_widget>
+                <order_status>pending</order_status>
+                <allowspecific>0</allowspecific>
+                <sort_order>0</sort_order>
+                <instructions><![CDATA[You will be redirected to <strong>Postpay</strong. Shop now, pay later in 4 easy instalments. <a href="https://postpay.io/" target="_blank">Learn more</a>.]]></instructions>
+            </postpay>
+        </payment>
+    </default>
+</config>
