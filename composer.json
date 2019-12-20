@@ -12,6 +12,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "magento/module-checkout": "100.3.*",
+        "magento/module-sales": "102.0.*",
+        "magento/module-payment": "100.3.*",
+        "magento/module-quote": "101.1.*",
         "postpay/postpay-php": "~0.0.3",
         "guzzlehttp/guzzle": "^6.0"
     },
