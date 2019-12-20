@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © 2019 Postpay Technology Limited. All rights reserved.
+ */
+declare(strict_types=1);
 
 namespace Postpay\Postpay\Observer;
 
@@ -13,7 +17,7 @@ class QuoteSubmitBeforeObserver implements ObserverInterface
     /**
      * @var Copy
      */
-    protected $objectCopyService;
+    private $objectCopyService;
 
     /**
      * SaveOrderBeforeSalesModelQuoteObserver constructor.
@@ -29,7 +33,7 @@ class QuoteSubmitBeforeObserver implements ObserverInterface
      * @param Observer $observer
      * @return $this
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): QuoteSubmitBeforeObserver
     {
         /* @var Order $order */
         $order = $observer->getEvent()->getData('order');
