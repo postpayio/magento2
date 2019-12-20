@@ -1,0 +1,34 @@
+{
+    "quote": {
+        "column": {
+            "postpay_order_id": true
+        },
+        "index": {
+            "POSTPAY_POSTPAY_POSTPAY_ORDER_ID": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "postpay_order_id": true
+        },
+        "index": {
+            "POSTPAY_POSTPAY_POSTPAY_ORDER_ID": true
+        }
+    },
+    "sales_invoice": {
+        "column": {
+            "postpay_order_id": true
+        },
+        "index": {
+            "POSTPAY_POSTPAY_POSTPAY_ORDER_ID": true
+        }
+    },
+    "sales_creditmemo": {
+        "column": {
+            "postpay_order_id": true
+        },
+        "index": {
+            "POSTPAY_POSTPAY_POSTPAY_ORDER_ID": true
+        }
+    }
+}
