@@ -12,6 +12,10 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 
+/**
+ * Class QuoteSubmitBeforeObserver
+ * @package Postpay\Postpay\Observer
+ */
 class QuoteSubmitBeforeObserver implements ObserverInterface
 {
     /**
