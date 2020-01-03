@@ -54,6 +54,10 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
 				<field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="120" translate="label" type="text">
 					<label>Sort Order</label>
 				</field>
+				<field id="debug" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="120" translate="label" type="select">
+					<label>Debug</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
 			</group>
 		</section>
 	</system>

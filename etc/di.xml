@@ -3,6 +3,32 @@
 Copyright © 2019 Postpay Technology Limited. All rights reserved.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Postpay\Postpay\Model\ConfigInterface" type="Postpay\Postpay\Model\Config" />
-    <preference for="Postpay\Postpay\Model\PostpayWrapperInterface" type="\Postpay\Postpay\Model\PostpayWrapper" />
+    <preference for="Postpay\Postpay\Model\ConfigInterface" type="Postpay\Postpay\Model\Config"/>
+    <preference for="Postpay\Postpay\Model\PostpayWrapperInterface" type="\Postpay\Postpay\Model\PostpayWrapper"/>
+    <preference for="Postpay\Postpay\Model\CheckoutManagerInterface" type="Postpay\Postpay\Model\CheckoutManager"/>
+
+    <virtualType name="PostpayPostpayConfig" type="Postpay\Postpay\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Postpay\Postpay\Model\Config::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PostpayPostpayLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">PostpayPostpayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Postpay\Postpay\Model\Ui\ConfigProvider">
+        <arguments>
+            <argument name="config" xsi:type="object">PostpayPostpayConfig</argument>
+        </arguments>
+    </type>
+
+    <type name="Postpay\Postpay\Model\PostpayWrapper">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostpayPostpayLogger</argument>
+            <argument name="config" xsi:type="object">PostpayPostpayConfig</argument>
+        </arguments>
+    </type>
 </config>

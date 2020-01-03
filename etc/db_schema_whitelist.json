@@ -1,7 +1,8 @@
 {
     "quote": {
         "column": {
-            "postpay_order_id": true
+            "postpay_order_id": true,
+            "postpay_redirect_url": true
         },
         "index": {
             "POSTPAY_POSTPAY_POSTPAY_ORDER_ID": true

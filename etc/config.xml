@@ -19,6 +19,7 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
                 <allowspecific>0</allowspecific>
                 <sort_order>0</sort_order>
                 <instructions><![CDATA[You will be redirected to <strong>Postpay</strong>. Shop now, pay later in 4 easy instalments. <a href="https://postpay.io/" target="_blank">Learn more</a>.]]></instructions>
+                <debug>0</debug>
             </postpay>
         </payment>
     </default>

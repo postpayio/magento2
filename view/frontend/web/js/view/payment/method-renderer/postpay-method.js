@@ -28,7 +28,7 @@ define(
                         function () {
                             customerData.invalidate(['cart']);
                             $.mage.redirect(
-                                 window.checkoutConfig.payment[that.item.method].startUrl
+                                 window.checkoutConfig.payment[that.item.method].createUrl
                             );
                         }
                     );

@@ -2,10 +2,11 @@
 /**
  * Copyright © 2019 Postpay Technology Limited. All rights reserved.
  */
+declare(strict_types=1);
 
 namespace Postpay\Postpay\Model\Ui;
 
-use Postpay\Postpay\Model\Config;
+use Postpay\Postpay\Model\ConfigInterface;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\UrlInterface;
 
@@ -16,7 +17,7 @@ use Magento\Framework\UrlInterface;
 class ConfigProvider implements ConfigProviderInterface
 {
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
 
@@ -27,10 +28,11 @@ class ConfigProvider implements ConfigProviderInterface
 
     /**
      * ConfigProvider constructor.
-     * @param Config $config
+     * @param ConfigInterface $config
+     * @param UrlInterface $urlBuilder
      */
     public function __construct(
-        Config $config,
+        ConfigInterface $config,
         UrlInterface $urlBuilder
     ) {
         $this->config = $config;
@@ -48,7 +50,7 @@ class ConfigProvider implements ConfigProviderInterface
             'payment' => [
                 'postpay' => [
                     'instructions' => $this->config->getInstructions(),
-                    'startUrl' => $this->urlBuilder->getUrl()
+                    'createUrl' => $this->urlBuilder->getUrl(ConfigInterface::POSTPAY_CHECKOUT_CREATE_ROUTE)
                 ]
             ],
         ];

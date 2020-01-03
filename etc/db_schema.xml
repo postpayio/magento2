@@ -6,6 +6,7 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="quote" resource="checkout" comment="Sales Flat Quote">
         <column xsi:type="varchar" name="postpay_order_id" nullable="true" comment="Postpay Order ID"/>
+        <column xsi:type="text" name="postpay_redirect_url" nullable="true" comment="Postpay Redirect URL"/>
         <index referenceId="POSTPAY_POSTPAY_POSTPAY_ORDER_ID" indexType="btree">
             <column name="postpay_order_id"/>
         </index>

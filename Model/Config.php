@@ -6,7 +6,8 @@ declare(strict_types=1);
 
 namespace Postpay\Postpay\Model;
 
-use Magento\Backend\App\ConfigInterface as AppConfigInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Config
@@ -17,82 +18,167 @@ class Config implements ConfigInterface
     /**
      * Instructions path in configuration XML
      */
-    const XML_INSTRUCTIONS = 'payment/postpay/instructions';
+    const XML_INSTRUCTIONS = 'instructions';
 
     /**
      * Enabled path in configuration XML
      */
-    const XML_ACTIVE = 'payment/postpay/active';
+    const XML_ACTIVE = 'active';
 
     /**
      * Title path in configuration XML
      */
-    const XML_TITLE = 'payment/postpay/title';
+    const XML_TITLE = 'title';
 
     /**
      * Sandbox path in configuration XML
      */
-    const XML_SANDBOX = 'payment/postpay/sandbox';
+    const XML_SANDBOX = 'sandbox';
 
     /**
      * Merchant ID path in configuration XML
      */
-    const XML_MERCHANT_ID = 'payment/postpay/merchant_id';
+    const XML_MERCHANT_ID = 'merchant_id';
 
     /**
      * Secret Key path in configuration XML
      */
-    const XML_SECRET_KEY = 'payment/postpay/secret_key';
+    const XML_SECRET_KEY = 'secret_key';
 
     /**
      * Secret Key path in configuration XML
      */
-    const XML_SANDBOX_SECRET_KEY = 'payment/postpay/sandbox_secret_key';
+    const XML_SANDBOX_SECRET_KEY = 'sandbox_secret_key';
 
     /**
      * Product Widget path in configuration XML
      */
-    const XML_PRODUCT_WIDGET = 'payment/postpay/product_widget';
+    const XML_PRODUCT_WIDGET = 'product_widget';
 
     /**
      * Cart Widget path in configuration XML
      */
-    const XML_CART_WIDGET = 'payment/postpay/cart_widget';
+    const XML_CART_WIDGET = 'cart_widget';
 
     /**
      * New Order Status path in configuration XML
      */
-    const XML_ORDER_STATUS = 'payment/postpay/order_status';
+    const XML_ORDER_STATUS = 'order_status';
 
     /**
      * Payment from Applicable Countries path in configuration XML
      */
-    const XML_ALLOWSPECIFIC = 'payment/postpay/allowspecific';
+    const XML_ALLOWSPECIFIC = 'allowspecific';
 
     /**
      * Payment from Specific Countries path in configuration XML
      */
-    const XML_SPECIFICCOUNTRY = 'payment/postpay/specificcountry';
+    const XML_SPECIFICCOUNTRY = 'specificcountry';
 
     /**
      * Sort Order path in configuration XML
      */
-    const XML_SORT_ORDER = 'payment/postpay/sort_order';
+    const XML_SORT_ORDER = 'sort_order';
 
     /**
-     * @var AppConfigInterface
+     * Debug path in configuration XML
      */
-    private $config;
+    const XML_DEBUG = 'debug';
 
     /**
-     * Config constructor.
-     * @param AppConfigInterface $config
+     * Default payment method configuration path pattern
+     */
+    const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @var string|null
+     */
+    private $methodCode;
+
+    /**
+     * @var string|null
+     */
+    private $pathPattern;
+
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @param string|null $methodCode
+     * @param string $pathPattern
      */
     public function __construct(
-        AppConfigInterface $config
-    )
+        ScopeConfigInterface $scopeConfig,
+        $methodCode = null,
+        $pathPattern = self::DEFAULT_PATH_PATTERN
+    ) {
+        $this->scopeConfig = $scopeConfig;
+        $this->methodCode = $methodCode;
+        $this->pathPattern = $pathPattern;
+    }
+
+    /**
+     * Sets method code
+     *
+     * @param string $methodCode
+     * @return void
+     */
+    public function setMethodCode($methodCode)
     {
-        $this->config = $config;
+        $this->methodCode = $methodCode;
+    }
+
+    /**
+     * Sets path pattern
+     *
+     * @param string $pathPattern
+     * @return void
+     */
+    public function setPathPattern($pathPattern)
+    {
+        $this->pathPattern = $pathPattern;
+    }
+
+    /**
+     * Retrieve information from payment configuration
+     *
+     * @param string $field
+     * @param int|null $storeId
+     *
+     * @return mixed
+     */
+    public function getValue($field, $storeId = null)
+    {
+        if ($this->methodCode === null || $this->pathPattern === null) {
+            return null;
+        }
+
+        return $this->scopeConfig->getValue(
+            sprintf($this->pathPattern, $this->methodCode, $field),
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param string $field
+     * @param int|null $storeId
+     * @return bool|null
+     */
+    public function isSetFlag(string $field, ?int $storeId = null): ?bool
+    {
+        if ($this->methodCode === null || $this->pathPattern === null) {
+            return null;
+        }
+
+        return $this->scopeConfig->isSetFlag(
+            sprintf($this->pathPattern, $this->methodCode, $field),
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     /**
@@ -100,7 +186,7 @@ class Config implements ConfigInterface
      */
     public function getInstructions(): string
     {
-        return (string)$this->config->getValue(self::XML_INSTRUCTIONS);
+        return (string)$this->getValue(self::XML_INSTRUCTIONS);
     }
 
     /**
@@ -108,7 +194,7 @@ class Config implements ConfigInterface
      */
     public function getIsActive(): bool
     {
-        return (bool)$this->config->isSetFlag(self::XML_ACTIVE);
+        return (bool)$this->isSetFlag(self::XML_ACTIVE);
     }
 
     /**
@@ -116,7 +202,7 @@ class Config implements ConfigInterface
      */
     public function getTitle(): string
     {
-        return (string)$this->config->getValue(self::XML_TITLE);
+        return (string)$this->getValue(self::XML_TITLE);
     }
 
     /**
@@ -124,7 +210,7 @@ class Config implements ConfigInterface
      */
     public function getIsSandbox(): bool
     {
-        return (bool)$this->config->isSetFlag(self::XML_SANDBOX);
+        return (bool)$this->isSetFlag(self::XML_SANDBOX);
     }
 
     /**
@@ -132,7 +218,7 @@ class Config implements ConfigInterface
      */
     public function getMerchantId(): string
     {
-        return (string)$this->config->getValue(self::XML_MERCHANT_ID);
+        return (string)$this->getValue(self::XML_MERCHANT_ID);
     }
 
     /**
@@ -140,7 +226,7 @@ class Config implements ConfigInterface
      */
     public function getSecretKey(): string
     {
-        return (string)$this->config->getValue(self::XML_SECRET_KEY);
+        return (string)$this->getValue(self::XML_SECRET_KEY);
     }
 
     /**
@@ -148,7 +234,7 @@ class Config implements ConfigInterface
      */
     public function getSandboxSecretKey(): string
     {
-        return (string)$this->config->getValue(self::XML_SANDBOX_SECRET_KEY);
+        return (string)$this->getValue(self::XML_SANDBOX_SECRET_KEY);
     }
 
     /**
@@ -156,7 +242,7 @@ class Config implements ConfigInterface
      */
     public function getIsProductWidget(): bool
     {
-        return (bool)$this->config->isSetFlag(self::XML_PRODUCT_WIDGET);
+        return (bool)$this->isSetFlag(self::XML_PRODUCT_WIDGET);
     }
 
     /**
@@ -164,7 +250,7 @@ class Config implements ConfigInterface
      */
     public function getIsCartWidget(): bool
     {
-        return (bool)$this->config->isSetFlag(self::XML_CART_WIDGET);
+        return (bool)$this->isSetFlag(self::XML_CART_WIDGET);
     }
 
     /**
@@ -172,7 +258,7 @@ class Config implements ConfigInterface
      */
     public function getOrderStatus(): string
     {
-        return (string)$this->config->getValue(self::XML_ORDER_STATUS);
+        return (string)$this->getValue(self::XML_ORDER_STATUS);
     }
 
     /**
@@ -180,7 +266,7 @@ class Config implements ConfigInterface
      */
     public function getIsAllowspecific(): bool
     {
-        return (bool)$this->config->isSetFlag(self::XML_ALLOWSPECIFIC);
+        return (bool)$this->isSetFlag(self::XML_ALLOWSPECIFIC);
     }
 
     /**
@@ -188,7 +274,7 @@ class Config implements ConfigInterface
      */
     public function getSpecificCountry(): array
     {
-        return (array)$this->config->getValue(self::XML_SPECIFICCOUNTRY);
+        return (array)$this->getValue(self::XML_SPECIFICCOUNTRY);
     }
 
     /**
@@ -196,6 +282,14 @@ class Config implements ConfigInterface
      */
     public function getSortOrder(): int
     {
-        return (int)$this->config->getValue(self::XML_SORT_ORDER);
+        return (int)$this->getValue(self::XML_SORT_ORDER);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIsDebug(): bool
+    {
+        return (bool)$this->isSetFlag(self::XML_DEBUG);
     }
 }
