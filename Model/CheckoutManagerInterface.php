@@ -18,11 +18,23 @@ Interface CheckoutManagerInterface
      * @param Quote $quote
      * @return string
      */
-    public function createCheckout(Quote $quote): string;
+    public function convert(Quote $quote): string;
 
     /**
      * @param Quote $quote
      * @return string
      */
-    public function recoverCheckout(Quote $quote): string;
+    public function create(Quote $quote): string;
+
+    /**
+     * @param Quote $quote
+     * @return string
+     */
+    public function recover(Quote $quote): string;
+
+    /**
+     * @param Quote $quote
+     * @return string
+     */
+    public function generatePostpayOrderId(Quote $quote): string;
 }

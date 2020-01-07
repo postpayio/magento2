@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Postpay\Postpay\Controller\Checkout;
 
 use Exception;
-
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -63,12 +62,13 @@ class Create extends Action
             $quote = $this->checkoutSession->getQuote();
 
             $postpayOrderId = $quote->getData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE);
-            if($postpayOrderId) {
-                $redirectUrl = $this->checkoutManager->recoverCheckout($quote);
+            if( $postpayOrderId
+                && ($postpayOrderId === $this->checkoutManager->generatePostpayOrderId($quote))
+            ) {
+                $redirectUrl = $this->checkoutManager->recover($quote);
             } else {
-                $redirectUrl = $this->checkoutManager->createCheckout($quote);
+                $redirectUrl = $this->checkoutManager->create($quote);
             }
-
         } catch (Exception $e) {
             $this->logger->critical($e);
             $this->messageManager->addErrorMessage(__('Creating Postpay checkout failed. Please try again.'));
