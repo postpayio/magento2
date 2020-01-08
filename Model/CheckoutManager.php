@@ -9,14 +9,13 @@ namespace Postpay\Postpay\Model;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Magento\Checkout\Model\Type\Onepage;
+use Magento\Customer\CustomerData\SectionPoolInterface;
 use Magento\Customer\Model\Data\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Encryption\EncryptorInterface as Encryptor;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\UrlInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Sales\Model\Order;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
 use Postpay\Exceptions\PostpayException;
@@ -25,8 +24,9 @@ use Postpay\Postpay\Exception\PostpayCheckoutCartException;
 use Postpay\Postpay\Exception\PostpayCheckoutOrderException;
 use Postpay\Postpay\Exception\PostpayConfigurationException;
 use Psr\Log\LoggerInterface;
-use Magento\Quote\Api\CartRepositoryInterface as CartRepository;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\QuoteManagement;
+
 
 /**
  * Class CheckoutManager
@@ -58,7 +58,7 @@ class CheckoutManager implements CheckoutManagerInterface
     private $url;
 
     /**
-     * @var CartRepository
+     * @var CartRepositoryInterface
      */
     private $cartRepository;
 
@@ -73,11 +73,14 @@ class CheckoutManager implements CheckoutManagerInterface
     private $customerSession;
 
     /**
-     * Checkout data
-     *
      * @var CheckoutHelper
      */
     private $checkoutHelper;
+
+    /**
+     * @var SectionPoolInterface
+     */
+    protected $sectionPool;
 
     /**
      * CheckoutManager constructor.
@@ -86,10 +89,11 @@ class CheckoutManager implements CheckoutManagerInterface
      * @param PostpayWrapperInterface $postpayWrapper
      * @param LoggerInterface $logger
      * @param UrlInterface $url
-     * @param CartRepository $cartRepository
+     * @param CartRepositoryInterface $cartRepository
      * @param QuoteManagement $quoteManagement
      * @param CustomerSession $customerSession
      * @param CheckoutHelper $checkoutHelper
+     * @param SectionPoolInterface $sectionPool
      */
     public function __construct(
         Encryptor $encryptor,
@@ -97,10 +101,11 @@ class CheckoutManager implements CheckoutManagerInterface
         PostpayWrapperInterface $postpayWrapper,
         LoggerInterface $logger,
         UrlInterface $url,
-        CartRepository $cartRepository,
+        CartRepositoryInterface $cartRepository,
         QuoteManagement $quoteManagement,
         CustomerSession $customerSession,
-        CheckoutHelper $checkoutHelper
+        CheckoutHelper $checkoutHelper,
+        SectionPoolInterface $sectionPool
     ) {
         $this->encryptor = $encryptor;
         $this->imageHelper = $imageHelper;
@@ -111,17 +116,17 @@ class CheckoutManager implements CheckoutManagerInterface
         $this->quoteManagement = $quoteManagement;
         $this->customerSession = $customerSession;
         $this->checkoutHelper = $checkoutHelper;
+        $this->sectionPool = $sectionPool;
     }
 
     /**
      * @param Quote $quote
      * @return string
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
      * @throws PostpayCheckoutApiException
      * @throws PostpayCheckoutOrderException
      * @throws PostpayConfigurationException
      * @throws PostpayException
+     * @throws CouldNotSaveException
      */
     public function convert(Quote $quote): string
     {
@@ -173,7 +178,6 @@ class CheckoutManager implements CheckoutManagerInterface
             }
         }
 
-        /** @var Order $order */
         $orderId = $this->quoteManagement->placeOrder($quote->getId());
 
         if ($orderId) {
@@ -183,6 +187,8 @@ class CheckoutManager implements CheckoutManagerInterface
                 $orderId,
                 $postpayOrderId
             ));
+
+            $this->sectionPool->getSectionsData(['cart'], true);
         } else {
             $errorMessage = __(
                 'Failed to converted quote ID %s. Postpay reference was %s.',
