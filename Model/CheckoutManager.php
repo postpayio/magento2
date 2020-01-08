@@ -130,30 +130,36 @@ class CheckoutManager implements CheckoutManagerInterface
         $response = $this->postpayWrapper->post("/orders/$postpayOrderId/capture");
 
         if(!in_array($response->getStatusCode(), [200, 201, 202])) {
-            $errorMessage = __('Postpay API request was not successful.');
+            $errorMessage = __(
+                'Request for capturing Postpay order through Postpay API was not successful. Postpay reference %s.',
+                $postpayOrderId
+            );
 
-            throw new PostpayCheckoutApiException(sprintf('%s: %s', $errorMessage, $response->json()));
+            throw new PostpayCheckoutApiException($errorMessage);
         }
 
         $decodedResponse = $response->json();
         if(!$decodedResponse) {
-            $errorMessage = __('Unable to decode Postpay API response.');
+            $errorMessage = __(
+                'Unable to decode Postpay API response to request for capturing Postpay order. Postpay reference %s.',
+                $postpayOrderId
+            );
 
-            throw new PostpayCheckoutApiException(sprintf('%s: %s', $errorMessage, $response->json()));
+            throw new PostpayCheckoutApiException($errorMessage);
         }
 
-        /*
-         * Workaround for missing ext_order_id due to "This product is out of stock" exception thrown in quote submission process.
-         *
-         * It is required to load quote through the repository before passing it on to
-         * \Magento\Quote\Model\QuoteManagement::submit() due to Magento switching data types for quote item fields upon
-         * loading quote from repository, making strict comparison with quote item fields that were not pulled from
-         * repository fail causing "This product is out of stock" error in:
-         *
-         * https://github.com/magento/magento2/blob/2.2.5/app/code/Magento/Quote/Model/Quote/Item/CartItemPersister.php#L74
-         */
-        /** @var Quote $quote */
-        $quote = $this->cartRepository->get($quote->getId());
+        $decodedResponse = $response->json();
+        if( !isset($decodedResponse['status'])
+            || $decodedResponse['status'] !== CheckoutManagerInterface::STATUS_CAPTURED
+        ) {
+            $errorMessage = __(
+                'Capturing Postpay order through Postpay API was not successful. Postpay reference %s. Decoded response %s.',
+                $postpayOrderId,
+                $decodedResponse
+            );
+
+            throw new PostpayCheckoutApiException($errorMessage);
+        }
 
         if (!$quote->getCheckoutMethod()) {
             if ($this->customerSession->isLoggedIn()) {
@@ -300,7 +306,7 @@ class CheckoutManager implements CheckoutManagerInterface
              * URL that the customer is sent to if they successfully complete the checkout process. The order_id and
              * status=APPROVED will be sent to this URL as a HTTP query parameter in order to capture the order.
              */
-            'confirmation_url' => $this->url->getUrl(ConfigInterface::POSTPAY_CHECKOUT_CONFIRMATION_ROUTE),
+            'confirmation_url' => $this->url->getUrl(ConfigInterface::POSTPAY_CHECKOUT_CAPTURE_ROUTE),
 
             /**
              * URL that the customer is sent to if the payment process is cancelled. A status will be sent to this URL

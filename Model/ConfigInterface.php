@@ -38,7 +38,7 @@ Interface ConfigInterface extends GatewayConfigInterface
     /**
      * Magento route for capturing Postpay checkout
      */
-    const POSTPAY_CHECKOUT_CONFIRMATION_ROUTE = 'postpay/checkout/confirmation';
+    const POSTPAY_CHECKOUT_CAPTURE_ROUTE = 'postpay/checkout/capture';
 
     /**
      * Magento route for canceling Postpay checkout

@@ -14,6 +14,14 @@ use Magento\Quote\Model\Quote;
  */
 Interface CheckoutManagerInterface
 {
+    const STATUS_APPROVED = 'APPROVED';
+
+    const STATUS_DENIED = 'DENIED';
+
+    const STATUS_CANCELLED = 'CANCELLED';
+
+    const STATUS_CAPTURED = 'captured';
+
     /**
      * @param Quote $quote
      * @return string

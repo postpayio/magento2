@@ -20,17 +20,11 @@ use Psr\Log\LoggerInterface;
 
 
 /**
- * Class Confirmation
+ * Class Capture
  * @package Postpay\Postpay\Controller\Checkout
  */
-class Confirmation extends Action
+class Capture extends Action
 {
-    const STATUS_APPROVED = 'APPROVED';
-
-    const STATUS_DENIED = 'DENIED';
-
-    const STATUS_CANCELLED = 'CANCELLED';
-
     /**
      * @var CheckoutSession
      */
@@ -80,16 +74,16 @@ class Confirmation extends Action
 
             $quote = $this->checkoutSession->getQuote();
 
-            if($status !== self::STATUS_APPROVED) {
+            if($status !== CheckoutManagerInterface::STATUS_APPROVED) {
                 switch ($status) {
-                    case self::STATUS_CANCELLED:
+                    case CheckoutManagerInterface::STATUS_CANCELLED:
                         $errorMessage = __(
                             'Postpay order cancelled. Quote ID %s. Postpay reference %s.',
                             $quote->getId(),
                             $orderId
                         );
                         break;
-                    case self::STATUS_DENIED:
+                    case CheckoutManagerInterface::STATUS_DENIED:
                         $errorMessage = __(
                             'Postpay order was denied. Quote ID %s. Postpay reference %s.',
                             $quote->getId(),
@@ -126,7 +120,7 @@ class Confirmation extends Action
             $this->logger->critical($e);
 
             $this->messageManager->addErrorMessage(
-                __('Unable to confirm Postpay order.')
+                __('Unable to capture Postpay order.')
             );
 
             $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
