@@ -11,6 +11,7 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
+use Postpay\Exceptions\PostpayException;
 use Postpay\Postpay\Model\CheckoutManagerInterface;
 use Postpay\Postpay\Model\ConfigInterface;
 use Psr\Log\LoggerInterface;
@@ -69,7 +70,21 @@ class Create extends Action
             } else {
                 $redirectUrl = $this->checkoutManager->create($quote);
             }
-        } catch (Exception $e) {
+        }  catch (PostpayException $e) {
+            $errorCode = $e->getErrorCode();
+            if($errorCode == 'expired') {
+                $this->messageManager->addErrorMessage(
+                    __('Creating Postpay checkout failed. Please tray again.')
+                );
+            } else {
+                $this->messageManager->addErrorMessage(
+                    __('Creating Postpay checkout failed. Please try again.')
+                );
+            }
+            $this->logger->critical($e);
+
+            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+        }  catch (Exception $e) {
             $this->logger->critical($e);
             $this->messageManager->addErrorMessage(__('Creating Postpay checkout failed. Please try again.'));
 

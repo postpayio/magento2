@@ -12,6 +12,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Quote\Model\Quote;
+use Postpay\Exceptions\PostpayException;
 use Postpay\Postpay\Exception\PostpayCheckoutOrderException;
 use Postpay\Postpay\Model\CheckoutManagerInterface;
 use Postpay\Postpay\Model\ConfigInterface;
@@ -98,7 +99,22 @@ class Capture extends Action
                 );
                 throw new PostpayCheckoutOrderException($errorMessage);
             }
-        } catch (Exception $e) {
+        } catch (PostpayException $e) {
+            $this->logger->critical($e);
+
+            $errorCode = $e->getErrorCode();
+            if($errorCode === 'expired') {
+                $this->messageManager->addErrorMessage(
+                    __('Unable to capture Postpay order.')
+                );
+            } else {
+                $this->messageManager->addErrorMessage(
+                    __('Unable to capture Postpay order.')
+                );
+            }
+
+            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+        }  catch (Exception $e) {
             $this->logger->critical($e);
 
             $this->messageManager->addErrorMessage(
