@@ -75,30 +75,12 @@ class Capture extends Action
             $quote = $this->checkoutSession->getQuote();
 
             if($status !== CheckoutManagerInterface::STATUS_APPROVED) {
-                switch ($status) {
-                    case CheckoutManagerInterface::STATUS_CANCELLED:
-                        $errorMessage = __(
-                            'Postpay order cancelled. Quote ID %s. Postpay reference %s.',
-                            $quote->getId(),
-                            $orderId
-                        );
-                        break;
-                    case CheckoutManagerInterface::STATUS_DENIED:
-                        $errorMessage = __(
-                            'Postpay order was denied. Quote ID %s. Postpay reference %s.',
-                            $quote->getId(),
-                            $orderId
-                        );
-                        break;
-                    default:
-                        $errorMessage = __(
-                            'Postpay order was not approved. Status %s. Quote ID %s. Postpay reference %s.',
-                            $status,
-                            $quote->getId(),
-                            $orderId
-                        );
-                        break;
-                }
+                $errorMessage = __(
+                    'Postpay order was not approved. Status %s. Quote ID %s. Postpay reference %s.',
+                    $status,
+                    $quote->getId(),
+                    $orderId
+                );
                 throw new PostpayCheckoutOrderException($errorMessage);
             }
 
