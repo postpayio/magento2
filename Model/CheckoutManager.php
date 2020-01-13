@@ -18,12 +18,12 @@ use Magento\Framework\UrlInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
+use Magento\Sales\Model\Order;
 use Postpay\Exceptions\PostpayException;
 use Postpay\Postpay\Exception\PostpayCheckoutApiException;
 use Postpay\Postpay\Exception\PostpayCheckoutCartException;
 use Postpay\Postpay\Exception\PostpayCheckoutOrderException;
 use Postpay\Postpay\Exception\PostpayConfigurationException;
-use Psr\Log\LoggerInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\QuoteManagement;
 
@@ -45,11 +45,6 @@ class CheckoutManager implements CheckoutManagerInterface
      * @var PostpayWrapperInterface
      */
     private $postpayWrapper;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * @var UrlInterface
@@ -81,7 +76,6 @@ class CheckoutManager implements CheckoutManagerInterface
      * @param Encryptor $encryptor
      * @param ImageHelper $imageHelper
      * @param PostpayWrapperInterface $postpayWrapper
-     * @param LoggerInterface $logger
      * @param UrlInterface $url
      * @param CartRepositoryInterface $cartRepository
      * @param QuoteManagement $quoteManagement
@@ -92,7 +86,6 @@ class CheckoutManager implements CheckoutManagerInterface
         Encryptor $encryptor,
         ImageHelper $imageHelper,
         PostpayWrapperInterface $postpayWrapper,
-        LoggerInterface $logger,
         UrlInterface $url,
         CartRepositoryInterface $cartRepository,
         QuoteManagement $quoteManagement,
@@ -102,7 +95,6 @@ class CheckoutManager implements CheckoutManagerInterface
         $this->encryptor = $encryptor;
         $this->imageHelper = $imageHelper;
         $this->postpayWrapper = $postpayWrapper;
-        $this->logger = $logger;
         $this->url = $url;
         $this->cartRepository = $cartRepository;
         $this->quoteManagement = $quoteManagement;
@@ -122,7 +114,7 @@ class CheckoutManager implements CheckoutManagerInterface
 
         if (!$orderId) {
             $errorMessage = __(
-                'Failed to convert quote ID %s to order.',
+                'Failed to convert quote ID %1 to order.',
                 $quote->getId()
             );
             throw new PostpayCheckoutOrderException($errorMessage);
@@ -142,6 +134,17 @@ class CheckoutManager implements CheckoutManagerInterface
      */
     public function create(Quote $quote): string
     {
+        /** @var Item[] $quoteItems */
+        $quoteItems = $quote->getAllVisibleItems();
+
+        if(!$quoteItems) {
+            $errorMessage = __(
+                'Unable to create Postpay checkout since quote does not contain any items. Quote ID %1.',
+                $quote->getId()
+            );
+            throw new PostpayCheckoutCartException($errorMessage);
+        }
+
         if (!$quote->getCheckoutMethod()) {
             if ($this->customerSession->isLoggedIn()) {
                 $quote->setCheckoutMethod(Onepage::METHOD_CUSTOMER);
@@ -152,17 +155,6 @@ class CheckoutManager implements CheckoutManagerInterface
                     $quote->setCheckoutMethod(Onepage::METHOD_REGISTER);
                 }
             }
-        }
-
-        /** @var Item[] $quoteItems */
-        $quoteItems = $quote->getAllVisibleItems();
-
-        if(!$quoteItems) {
-            $errorMessage = __(
-                'Unable to create Postpay checkout since quote does not contain any items. Quote ID %s.',
-                $quote->getId()
-            );
-            throw new PostpayCheckoutCartException($errorMessage);
         }
 
         $postpayOrderId = $this->generatePostpayOrderId($quote);
@@ -293,7 +285,7 @@ class CheckoutManager implements CheckoutManagerInterface
 
         if(!in_array($response->getStatusCode(), [200, 201, 202])) {
             $errorMessage = __(
-                'Postpay API request was not successful. Status code: %s. Quote ID %s.',
+                'Postpay API request was not successful. Status code: %1. Quote ID %2.',
                 $response->getStatusCode(),
                 $quote->getId()
             );
@@ -305,7 +297,7 @@ class CheckoutManager implements CheckoutManagerInterface
 
         if(!$decodedResponse || !isset($decodedResponse['redirect_url'])) {
             $errorMessage = __(
-                'Malformed Postpay API response. Quote ID %s.',
+                'Malformed Postpay API response. Quote ID %1.',
                 $quote->getId()
             );
 
@@ -335,7 +327,7 @@ class CheckoutManager implements CheckoutManagerInterface
     }
 
     /**
-     * Generate unique ID for cart (out of quote ID and IDs of all the items with their Qty and row total)
+     * Generate unique ID for cart using quote ID, IDs of all the items with their Qty and row total.
      *
      * @param Quote $quote
      * @return string
@@ -344,16 +336,37 @@ class CheckoutManager implements CheckoutManagerInterface
     {
         $quoteItems = $quote->getItems();
 
-        // We generate unique ID for this cart (quote ID and IDs of all the items with their Qty
-        $postpayOrderId = sprintf('postpay_%d', $quote->getId());
+        $postpayOrderIdQuoteItems = '';
         foreach ($quoteItems as $quoteItem) {
-            $postpayOrderId .= sprintf(
-                '_%d_%.4f',
+            $postpayOrderIdQuoteItems .= sprintf(
+                '%d_%.4f',
                 $quoteItem->getItemId(),
                 $quoteItem->getBaseRowTotalInclTax()
             );
         }
 
+        $postpayOrderId = sprintf('postpay_order_id_%d_%s', $quote->getId(), $postpayOrderIdQuoteItems);
+
         return  $this->encryptor->hash($postpayOrderId);
+    }
+
+    /**
+     * Generate unique ID for order using Postpay order ID and total amount left to refund on particular order.
+     *
+     * @param Order $order
+     * @param float $amount
+     * @return string
+     */
+    public function generatePostpayRefundId(Order $order, float $amount): string
+    {
+        $postpayOrderId = $order->getData(Config::POSTPAY_ORDER_ID_ATTRIBUTE);
+
+        $postpayRefundId = sprintf(
+            'postpay_refund_id_%s_%.4f',
+            $postpayOrderId,
+            ((float)$order->getBaseTotalPaid()-$order->getBaseTotalRefunded())
+        );
+
+        return  $this->encryptor->hash($postpayRefundId);
     }
 }

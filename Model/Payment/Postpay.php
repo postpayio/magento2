@@ -10,8 +10,6 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\DataObject;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
@@ -24,6 +22,7 @@ use Postpay\Postpay\Model\ConfigInterface;
 use Postpay\Postpay\Model\PostpayWrapperInterface;
 use Postpay\Postpay\Exception\PostpayCheckoutApiException;
 use Postpay\Postpay\Model\CheckoutManagerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Postpay
@@ -77,6 +76,16 @@ class Postpay extends AbstractMethod
     private $postpayWrapper;
 
     /**
+     * @var CheckoutManagerInterface
+     */
+    private $checkoutManager;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $systemLogger;
+
+    /**
      * Postpay constructor.
      * @param Context $context
      * @param Registry $registry
@@ -86,6 +95,8 @@ class Postpay extends AbstractMethod
      * @param ScopeConfigInterface $scopeConfig
      * @param Logger $logger
      * @param PostpayWrapperInterface $postpayWrapper
+     * @param CheckoutManagerInterface $checkoutManager
+     * @param LoggerInterface $systemLogger
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -100,6 +111,8 @@ class Postpay extends AbstractMethod
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
         PostpayWrapperInterface $postpayWrapper,
+        CheckoutManagerInterface $checkoutManager,
+        LoggerInterface $systemLogger,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [],
@@ -119,12 +132,14 @@ class Postpay extends AbstractMethod
             $directory
         );
         $this->postpayWrapper = $postpayWrapper;
+        $this->checkoutManager = $checkoutManager;
+        $this->systemLogger = $systemLogger;
     }
 
     /**
      * Capture payment
      *
-     * @param DataObject|InfoInterface $payment
+     * @param InfoInterface $payment
      * @param float $amount
      * @return $this
      * @throws Exception
@@ -144,7 +159,7 @@ class Postpay extends AbstractMethod
 
             if(!in_array($response->getStatusCode(), [200, 201, 202])) {
                 $errorMessage = __(
-                    'Request for capturing Postpay order through Postpay API was not successful. Postpay reference %s.',
+                    'Request for capturing Postpay order through Postpay API was not successful. Postpay reference %1.',
                     $postpayOrderId
                 );
 
@@ -154,7 +169,7 @@ class Postpay extends AbstractMethod
             $decodedResponse = $response->json();
             if(!$decodedResponse) {
                 $errorMessage = __(
-                    'Unable to decode Postpay API response to request for capturing Postpay order. Postpay reference %s.',
+                    'Unable to decode Postpay API response to request for capturing Postpay order. Postpay reference %1.',
                     $postpayOrderId
                 );
 
@@ -166,22 +181,24 @@ class Postpay extends AbstractMethod
                 || $decodedResponse['status'] !== CheckoutManagerInterface::STATUS_CAPTURED
             ) {
                 $errorMessage = __(
-                    'Capturing Postpay order through Postpay API was not successful. Postpay reference %s. Decoded response %s.',
+                    'Capturing Postpay order through Postpay API was not successful. Postpay reference %1. Decoded response %2.',
                     $postpayOrderId,
                     $decodedResponse
                 );
 
                 throw new PostpayCheckoutApiException($errorMessage);
             }
-            $payment
-                ->setTransactionId($postpayOrderId)
-                ->setIsTransactionClosed(0);
 
+            $payment->setTransactionId($postpayOrderId);
+            $payment->setIsTransactionClosed(0);
         } catch (Exception $e) {
             $this->debugData([
-                'postpay_order_id' => $postpayOrderId,
+                'transaction_id' => $postpayOrderId,
                 'exception' => $e->getMessage()
             ]);
+
+            $this->systemLogger->critical($e);
+
             throw $e;
         }
 
@@ -191,19 +208,72 @@ class Postpay extends AbstractMethod
     /**
      * Refund specified amount for payment
      *
-     * @param DataObject|InfoInterface $payment
+     * @param InfoInterface $payment
      * @param float $amount
      * @return $this
-     * @throws LocalizedException
+     * @throws Exception
      * @api
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @deprecated 100.2.0
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        if (!$this->canRefund()) {
-            throw new LocalizedException(__('The refund action is not available.'));
+        $postpayOrderId = $payment->getParentTransactionId();
+
+        /** @var Order $order */
+        $order = $payment->getOrder();
+
+        try {
+            $postpayRefundId = $this->checkoutManager->generatePostpayRefundId($order, $amount);
+
+            $response = $this->postpayWrapper->post("/orders/$postpayOrderId/refunds", [
+                'refund_id' => $postpayRefundId,
+                'amount' => $amount
+            ]);
+
+            if(!in_array($response->getStatusCode(), [200, 201, 202])) {
+                $errorMessage = __(
+                    'Request for refunding Postpay order through Postpay API was not successful. Postpay reference %1.',
+                    $postpayOrderId
+                );
+
+                throw new PostpayCheckoutApiException($errorMessage);
+            }
+
+            $decodedResponse = $response->json();
+            if(!$decodedResponse) {
+                $errorMessage = __(
+                    'Unable to decode Postpay API response to request for refunding Postpay order. Postpay reference %1.',
+                    $postpayOrderId
+                );
+
+                throw new PostpayCheckoutApiException($errorMessage);
+            }
+
+            $decodedResponse = $response->json();
+            if(!isset($decodedResponse['amount'])) {
+                $errorMessage = __(
+                    'Refunding Postpay order through Postpay API was not successful. Postpay reference %1.',
+                    $postpayOrderId
+                );
+
+                throw new PostpayCheckoutApiException($errorMessage);
+            }
+
+            $payment->setTransactionId($postpayRefundId);
+            $payment->setParentTransactionId($postpayOrderId);
+            $payment->setIsTransactionClosed(1);
+        } catch (Exception $e) {
+            $this->debugData([
+                'transaction_id' => $postpayOrderId,
+                'exception' => $e->getMessage()
+            ]);
+
+            $this->systemLogger->critical($e);
+
+            throw $e;
         }
+
         return $this;
     }
 }

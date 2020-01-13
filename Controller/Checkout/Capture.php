@@ -17,8 +17,8 @@ use Postpay\Postpay\Exception\PostpayCheckoutOrderException;
 use Postpay\Postpay\Model\CheckoutManagerInterface;
 use Postpay\Postpay\Model\ConfigInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Payment\Model\Method\Logger;
 use Psr\Log\LoggerInterface;
-
 
 /**
  * Class Capture
@@ -32,7 +32,7 @@ class Capture extends Action
     private $checkoutSession;
 
     /**
-     * @var LoggerInterface
+     * @var Logger
      */
     private $logger;
 
@@ -42,21 +42,30 @@ class Capture extends Action
     private $checkoutManager;
 
     /**
-     * Create constructor.
+     * @var LoggerInterface
+     */
+    private $systemLogger;
+
+    /**
+     * Capture constructor.
      * @param Context $context
-     * @param LoggerInterface $logger
+     * @param CheckoutSession $checkoutSession
+     * @param Logger $logger
      * @param CheckoutManagerInterface $checkoutManager
+     * @param LoggerInterface $systemLogger
      */
     public function __construct(
         Context $context,
         CheckoutSession $checkoutSession,
-        LoggerInterface $logger,
-        CheckoutManagerInterface $checkoutManager
+        Logger $logger,
+        CheckoutManagerInterface $checkoutManager,
+        LoggerInterface $systemLogger
     ) {
         parent::__construct($context);
         $this->logger = $logger;
         $this->checkoutManager = $checkoutManager;
         $this->checkoutSession = $checkoutSession;
+        $this->systemLogger = $systemLogger;
     }
 
     /**
@@ -77,7 +86,7 @@ class Capture extends Action
 
             if($status !== CheckoutManagerInterface::STATUS_APPROVED) {
                 $errorMessage = __(
-                    'Postpay order was not approved. Status %s. Quote ID %s. Postpay reference %s.',
+                    'Postpay order was not approved. Status %1. Quote ID %2. Postpay reference %3.',
                     $status,
                     $quote->getId(),
                     $orderId
@@ -93,14 +102,18 @@ class Capture extends Action
                 $redirectUrl = $this->checkoutManager->convert($quote);
             } else {
                 $errorMessage = __(
-                    'Quote mismatch. Quote ID %s. Postpay reference %s.',
+                    'Quote mismatch. Quote ID %1. Postpay reference %2.',
                     $quote->getId(),
                     $orderId
                 );
                 throw new PostpayCheckoutOrderException($errorMessage);
             }
         } catch (PostpayException $e) {
-            $this->logger->critical($e);
+            $this->logger->debug([
+                'exception' => $e->getMessage()
+            ]);
+
+            $this->systemLogger->critical($e);
 
             $errorCode = $e->getErrorCode();
             if($errorCode === 'expired') {
@@ -115,7 +128,11 @@ class Capture extends Action
 
             $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
         }  catch (Exception $e) {
-            $this->logger->critical($e);
+            $this->logger->debug([
+                'exception' => $e->getMessage()
+            ]);
+
+            $this->systemLogger->critical($e);
 
             $this->messageManager->addErrorMessage(
                 __('Unable to capture Postpay order.')

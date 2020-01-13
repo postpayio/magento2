@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Postpay\Postpay\Model;
 
 use Magento\Quote\Model\Quote;
+use Magento\Sales\Model\Order;
 
 /**
  * Interface CheckoutManagerInterface
@@ -62,4 +63,11 @@ Interface CheckoutManagerInterface
      * @return string
      */
     public function generatePostpayOrderId(Quote $quote): string;
+
+    /**
+     * @param Order $order
+     * @param float $amount
+     * @return string
+     */
+    public function generatePostpayRefundId(Order $order, float $amount): string;
 }
