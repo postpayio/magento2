@@ -9,7 +9,6 @@ namespace Postpay\Postpay\Model;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Magento\Checkout\Model\Type\Onepage;
-use Magento\Customer\CustomerData\SectionPoolInterface;
 use Magento\Customer\Model\Data\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Encryption\EncryptorInterface as Encryptor;
@@ -17,7 +16,6 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Sales\Model\Order;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
 use Postpay\Exceptions\PostpayException;
@@ -27,11 +25,7 @@ use Postpay\Postpay\Exception\PostpayCheckoutOrderException;
 use Postpay\Postpay\Exception\PostpayConfigurationException;
 use Psr\Log\LoggerInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Quote\Model\QuoteManagement;
-use Magento\Sales\Api\InvoiceManagementInterface;
-use Magento\Sales\Model\Order\Invoice;
-use Magento\Framework\DB\TransactionFactory;
 
 /**
  * Class CheckoutManager
@@ -83,26 +77,6 @@ class CheckoutManager implements CheckoutManagerInterface
     private $checkoutHelper;
 
     /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-
-    /**
-     * @var SectionPoolInterface
-     */
-    protected $sectionPool;
-
-    /**
-     * @var InvoiceManagementInterface
-     */
-    private $invoiceManagement;
-
-    /**
-     * @var TransactionFactory
-     */
-    private $transactionFactory;
-
-    /**
      * CheckoutManager constructor.
      * @param Encryptor $encryptor
      * @param ImageHelper $imageHelper
@@ -113,10 +87,6 @@ class CheckoutManager implements CheckoutManagerInterface
      * @param QuoteManagement $quoteManagement
      * @param CustomerSession $customerSession
      * @param CheckoutHelper $checkoutHelper
-     * @param SectionPoolInterface $sectionPool
-     * @param OrderRepositoryInterface $orderRepository
-     * @param InvoiceManagementInterface $invoiceManagement
-     * @param TransactionFactory $transactionFactory
      */
     public function __construct(
         Encryptor $encryptor,
@@ -127,11 +97,7 @@ class CheckoutManager implements CheckoutManagerInterface
         CartRepositoryInterface $cartRepository,
         QuoteManagement $quoteManagement,
         CustomerSession $customerSession,
-        CheckoutHelper $checkoutHelper,
-        SectionPoolInterface $sectionPool,
-        OrderRepositoryInterface $orderRepository,
-        InvoiceManagementInterface $invoiceManagement,
-        TransactionFactory $transactionFactory
+        CheckoutHelper $checkoutHelper
     ) {
         $this->encryptor = $encryptor;
         $this->imageHelper = $imageHelper;
@@ -142,102 +108,22 @@ class CheckoutManager implements CheckoutManagerInterface
         $this->quoteManagement = $quoteManagement;
         $this->customerSession = $customerSession;
         $this->checkoutHelper = $checkoutHelper;
-        $this->sectionPool = $sectionPool;
-        $this->orderRepository = $orderRepository;
-        $this->invoiceManagement = $invoiceManagement;
-        $this->transactionFactory = $transactionFactory;
     }
 
     /**
      * @param Quote $quote
      * @return string
      * @throws CouldNotSaveException
-     * @throws PostpayCheckoutApiException
      * @throws PostpayCheckoutOrderException
-     * @throws PostpayConfigurationException
-     * @throws PostpayException
-     * @throws LocalizedException
      */
     public function convert(Quote $quote): string
     {
-        $postpayOrderId = $quote->getData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE);
-
-        $response = $this->postpayWrapper->post("/orders/$postpayOrderId/capture");
-
-        if(!in_array($response->getStatusCode(), [200, 201, 202])) {
-            $errorMessage = __(
-                'Request for capturing Postpay order through Postpay API was not successful. Postpay reference %s.',
-                $postpayOrderId
-            );
-
-            throw new PostpayCheckoutApiException($errorMessage);
-        }
-
-        $decodedResponse = $response->json();
-        if(!$decodedResponse) {
-            $errorMessage = __(
-                'Unable to decode Postpay API response to request for capturing Postpay order. Postpay reference %s.',
-                $postpayOrderId
-            );
-
-            throw new PostpayCheckoutApiException($errorMessage);
-        }
-
-        $decodedResponse = $response->json();
-        if( !isset($decodedResponse['status'])
-            || $decodedResponse['status'] !== CheckoutManagerInterface::STATUS_CAPTURED
-        ) {
-            $errorMessage = __(
-                'Capturing Postpay order through Postpay API was not successful. Postpay reference %s. Decoded response %s.',
-                $postpayOrderId,
-                $decodedResponse
-            );
-
-            throw new PostpayCheckoutApiException($errorMessage);
-        }
-
-        if (!$quote->getCheckoutMethod()) {
-            if ($this->customerSession->isLoggedIn()) {
-                $quote->setCheckoutMethod(Onepage::METHOD_CUSTOMER);
-            } else {
-                if ($this->checkoutHelper->isAllowedGuestCheckout($quote)) {
-                    $quote->setCheckoutMethod(Onepage::METHOD_GUEST);
-                } else {
-                    $quote->setCheckoutMethod(Onepage::METHOD_REGISTER);
-                }
-            }
-        }
-
         $orderId = $this->quoteManagement->placeOrder($quote->getId());
 
-        if ($orderId) {
-            $this->logger->info(__(
-                'Successfully converted quote ID %s into order ID %s. Postpay reference was %s.',
-                $quote->getId(),
-                $orderId,
-                $postpayOrderId
-            ));
-
-            $this->sectionPool->getSectionsData(['cart'], true);
-
-            /** @var Order $order */
-            $order = $this->orderRepository->get($orderId);
-
-            /** @var Invoice $invoice */
-            $invoice = $this->invoiceManagement->prepareInvoice($order);
-            $invoice->setRequestedCaptureCase(Invoice::CAPTURE_ONLINE);
-            $invoice->register();
-            $transaction = $this->transactionFactory->create()
-                ->addObject($invoice)
-                ->addObject($invoice->getOrder());
-            $transaction->save();
-            $order->addStatusHistoryComment(__('Invoice #%s created.', $invoice->getIncrementId()));
-            $this->orderRepository->save($order);
-        } else {
+        if (!$orderId) {
             $errorMessage = __(
-                'Failed to converted quote ID %s. Postpay reference was %s.',
-                $quote->getId(),
-                $postpayOrderId
+                'Failed to convert quote ID %s to order.',
+                $quote->getId()
             );
             throw new PostpayCheckoutOrderException($errorMessage);
         }
@@ -252,9 +138,22 @@ class CheckoutManager implements CheckoutManagerInterface
      * @throws PostpayCheckoutCartException
      * @throws PostpayException
      * @throws PostpayConfigurationException
+     * @throws LocalizedException
      */
     public function create(Quote $quote): string
     {
+        if (!$quote->getCheckoutMethod()) {
+            if ($this->customerSession->isLoggedIn()) {
+                $quote->setCheckoutMethod(Onepage::METHOD_CUSTOMER);
+            } else {
+                if ($this->checkoutHelper->isAllowedGuestCheckout($quote)) {
+                    $quote->setCheckoutMethod(Onepage::METHOD_GUEST);
+                } else {
+                    $quote->setCheckoutMethod(Onepage::METHOD_REGISTER);
+                }
+            }
+        }
+
         /** @var Item[] $quoteItems */
         $quoteItems = $quote->getAllVisibleItems();
 
@@ -417,6 +316,10 @@ class CheckoutManager implements CheckoutManagerInterface
 
         $quote->setData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE, $postpayOrderId);
         $quote->setData(ConfigInterface::POSTPAY_REDIRECT_URL_ATTRIBUTE, $postpayRedirectUrl);
+
+        $payment = $quote->getPayment();
+        $payment->setAdditionalInformation(self::PAYMENT_REFERENCE_KEY, $postpayOrderId);
+
         $this->cartRepository->save($quote);
 
         return $postpayRedirectUrl;

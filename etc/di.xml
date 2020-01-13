@@ -31,4 +31,10 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
             <argument name="config" xsi:type="object">PostpayPostpayConfig</argument>
         </arguments>
     </type>
+
+    <type name="Postpay\Postpay\Model\Payment\Postpay">
+        <arguments>
+            <argument name="logger" xsi:type="object">PostpayPostpayLogger</argument>
+        </arguments>
+    </type>
 </config>

@@ -61,11 +61,6 @@ class Config implements ConfigInterface
     const XML_CART_WIDGET = 'cart_widget';
 
     /**
-     * New Order Status path in configuration XML
-     */
-    const XML_ORDER_STATUS = 'order_status';
-
-    /**
      * Payment from Applicable Countries path in configuration XML
      */
     const XML_ALLOWSPECIFIC = 'allowspecific';
@@ -251,14 +246,6 @@ class Config implements ConfigInterface
     public function getIsCartWidget(): bool
     {
         return (bool)$this->isSetFlag(self::XML_CART_WIDGET);
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrderStatus(): string
-    {
-        return (string)$this->getValue(self::XML_ORDER_STATUS);
     }
 
     /**

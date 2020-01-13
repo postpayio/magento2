@@ -7,6 +7,7 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
         <payment>
             <postpay>
                 <active>0</active>
+                <payment_action>authorize_capture</payment_action>
                 <model>Postpay\Postpay\Model\Payment\Postpay</model>
                 <title>Postpay</title>
                 <sandbox>0</sandbox>
@@ -15,7 +16,6 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
                 <sandbox_secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <product_widget>0</product_widget>
                 <cart_widget>0</cart_widget>
-                <order_status>pending</order_status>
                 <allowspecific>0</allowspecific>
                 <sort_order>0</sort_order>
                 <instructions><![CDATA[You will be redirected to <strong>Postpay</strong>. Shop now, pay later in 4 easy instalments. <a href="https://postpay.io/" target="_blank">Learn more</a>.]]></instructions>

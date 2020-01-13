@@ -111,11 +111,6 @@ Interface ConfigInterface extends GatewayConfigInterface
     public function getIsCartWidget(): bool;
 
     /**
-     * @return string
-     */
-    public function getOrderStatus(): string;
-
-    /**
      * @return bool
      */
     public function getIsAllowspecific(): bool;

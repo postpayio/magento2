@@ -35,6 +35,11 @@ Interface CheckoutManagerInterface
     const STATUS_CAPTURED = 'captured';
 
     /**
+     * Payment additional data payment reference key
+     */
+    const PAYMENT_REFERENCE_KEY = 'postpay_payment_reference';
+
+    /**
      * @param Quote $quote
      * @return string
      */
