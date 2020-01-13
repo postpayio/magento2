@@ -14,12 +14,24 @@ use Magento\Quote\Model\Quote;
  */
 Interface CheckoutManagerInterface
 {
+    /**
+     * Approved Postpay status
+     */
     const STATUS_APPROVED = 'APPROVED';
 
+    /**
+     * Denied Postpay status
+     */
     const STATUS_DENIED = 'DENIED';
 
+    /**
+     * Cancelled Postpay status
+     */
     const STATUS_CANCELLED = 'CANCELLED';
 
+    /**
+     * Captured Postpay status
+     */
     const STATUS_CAPTURED = 'captured';
 
     /**
