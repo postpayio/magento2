@@ -196,8 +196,8 @@ class Postpay extends AbstractMethod
             $payment->setTransactionAdditionalInfo(
                 Transaction::RAW_DETAILS,
                 [
-                    'status' => $decodedResponse['status'],
-                    'amount' => $amount
+                    'Status' => $decodedResponse['status'],
+                    'Amount' => $amount
                 ]
             );
         } catch (Exception $e) {
