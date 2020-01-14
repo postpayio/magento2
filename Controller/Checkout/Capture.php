@@ -94,7 +94,8 @@ class Capture extends Action
                 throw new PostpayCheckoutOrderException($errorMessage);
             }
 
-            $postpayOrderId = $quote->getData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE);
+            $postpayOrderId = $quote->getPayment()
+                ->getAdditionalInformation(ConfigInterface::POSTPAY_ORDER_ID_PAYMENT_INFO_KEY);
             if( $postpayOrderId
                 && $postpayOrderId == $orderId
                 && $postpayOrderId === $this->checkoutManager->generatePostpayOrderId($quote)

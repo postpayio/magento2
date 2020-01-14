@@ -18,6 +18,7 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Postpay\Postpay\Model\ConfigInterface;
 use Postpay\Postpay\Model\PostpayWrapperInterface;
 use Postpay\Postpay\Exception\PostpayCheckoutApiException;
@@ -152,7 +153,8 @@ class Postpay extends AbstractMethod
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        $postpayOrderId = $order->getData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE);
+        $postpayOrderId = $order->getPayment()
+            ->getAdditionalInformation(ConfigInterface::POSTPAY_ORDER_ID_PAYMENT_INFO_KEY);
 
         try {
             $response = $this->postpayWrapper->post("/orders/$postpayOrderId/capture");
@@ -191,6 +193,13 @@ class Postpay extends AbstractMethod
 
             $payment->setTransactionId($postpayOrderId);
             $payment->setIsTransactionClosed(0);
+            $payment->setTransactionAdditionalInfo(
+                Transaction::RAW_DETAILS,
+                [
+                    'status' => CheckoutManagerInterface::STATUS_CAPTURED,
+                    'amount' => $amount
+                ]
+            );
         } catch (Exception $e) {
             $this->debugData([
                 'transaction_id' => $postpayOrderId,
@@ -263,6 +272,13 @@ class Postpay extends AbstractMethod
             $payment->setTransactionId($postpayRefundId);
             $payment->setParentTransactionId($postpayOrderId);
             $payment->setIsTransactionClosed(1);
+
+            $payment->setTransactionAdditionalInfo(
+                Transaction::RAW_DETAILS,
+                [
+                    'amount' => $amount
+                ]
+            );
         } catch (Exception $e) {
             $this->debugData([
                 'transaction_id' => $postpayOrderId,

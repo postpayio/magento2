@@ -111,7 +111,7 @@ class Cancel extends Action
 
             $this->systemLogger->critical($e);
 
-            $this->messageManager->addErrorMessage(__('Unable to capture Postpay order.'));
+            $this->messageManager->addErrorMessage(__('Postpay checkout cancelled.'));
 
             $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
         }

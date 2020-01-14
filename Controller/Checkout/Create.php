@@ -72,7 +72,8 @@ class Create extends Action
         try {
             $quote = $this->checkoutSession->getQuote();
 
-            $postpayOrderId = $quote->getData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE);
+            $postpayOrderId = $quote->getPayment()
+                ->getAdditionalInformation(ConfigInterface::POSTPAY_ORDER_ID_PAYMENT_INFO_KEY);
             if( $postpayOrderId
                 && ($postpayOrderId === $this->checkoutManager->generatePostpayOrderId($quote))
             ) {

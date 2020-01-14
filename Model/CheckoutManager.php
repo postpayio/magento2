@@ -18,6 +18,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
+use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
 use Postpay\Exceptions\PostpayException;
 use Postpay\Postpay\Exception\PostpayCheckoutApiException;
@@ -306,11 +307,10 @@ class CheckoutManager implements CheckoutManagerInterface
 
         $postpayRedirectUrl = $decodedResponse['redirect_url'];
 
-        $quote->setData(ConfigInterface::POSTPAY_ORDER_ID_ATTRIBUTE, $postpayOrderId);
-        $quote->setData(ConfigInterface::POSTPAY_REDIRECT_URL_ATTRIBUTE, $postpayRedirectUrl);
-
+        /** @var Payment $payment */
         $payment = $quote->getPayment();
-        $payment->setAdditionalInformation(self::PAYMENT_REFERENCE_KEY, $postpayOrderId);
+        $payment->setAdditionalInformation(ConfigInterface::POSTPAY_ORDER_ID_PAYMENT_INFO_KEY, $postpayOrderId);
+        $payment->setAdditionalInformation(ConfigInterface::POSTPAY_REDIRECT_URL_PAYMENT_INFO_KEY, $postpayRedirectUrl);
 
         $this->cartRepository->save($quote);
 
@@ -323,7 +323,9 @@ class CheckoutManager implements CheckoutManagerInterface
      */
     public function recover(Quote $quote): string
     {
-        return $quote->getData(Config::POSTPAY_REDIRECT_URL_ATTRIBUTE);
+        /** @var Payment $payment */
+        $payment = $quote->getPayment();
+        return (string)$payment->getAdditionalInformation(Config::POSTPAY_REDIRECT_URL_PAYMENT_INFO_KEY);
     }
 
     /**
@@ -359,7 +361,8 @@ class CheckoutManager implements CheckoutManagerInterface
      */
     public function generatePostpayRefundId(Order $order, float $amount): string
     {
-        $postpayOrderId = $order->getData(Config::POSTPAY_ORDER_ID_ATTRIBUTE);
+        $postpayOrderId = $order->getPayment()
+            ->getAdditionalInformation(ConfigInterface::POSTPAY_ORDER_ID_PAYMENT_INFO_KEY);
 
         $postpayRefundId = sprintf(
             'postpay_refund_id_%s_%.4f',

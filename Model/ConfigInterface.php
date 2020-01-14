@@ -23,12 +23,12 @@ Interface ConfigInterface extends GatewayConfigInterface
     /**
      * Postpay order ID attribute code
      */
-    const POSTPAY_ORDER_ID_ATTRIBUTE = 'postpay_order_id';
+    const POSTPAY_ORDER_ID_PAYMENT_INFO_KEY = 'postpay_order_id';
 
     /**
      * Postpay order ID attribute code
      */
-    const POSTPAY_REDIRECT_URL_ATTRIBUTE = 'postpay_redirect_url';
+    const POSTPAY_REDIRECT_URL_PAYMENT_INFO_KEY = 'postpay_redirect_url';
 
     /**
      * Magento route for creating Postpay checkout
