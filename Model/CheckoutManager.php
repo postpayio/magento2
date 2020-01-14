@@ -286,7 +286,7 @@ class CheckoutManager implements CheckoutManagerInterface
 
         if(!in_array($response->getStatusCode(), [200, 201, 202])) {
             $errorMessage = __(
-                'Postpay API request was not successful. Status code: %1. Quote ID %2.',
+                'Postpay API request for creating checkout was not successful. Status code: %1. Quote ID %2.',
                 $response->getStatusCode(),
                 $quote->getId()
             );
@@ -295,10 +295,9 @@ class CheckoutManager implements CheckoutManagerInterface
         }
 
         $decodedResponse = $response->json();
-
         if(!$decodedResponse || !isset($decodedResponse['redirect_url'])) {
             $errorMessage = __(
-                'Malformed Postpay API response. Quote ID %1.',
+                'Malformed Postpay API response while creating checkout. Quote ID %1.',
                 $quote->getId()
             );
 

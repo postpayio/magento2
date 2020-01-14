@@ -161,7 +161,7 @@ class Postpay extends AbstractMethod
 
             if(!in_array($response->getStatusCode(), [200, 201, 202])) {
                 $errorMessage = __(
-                    'Request for capturing Postpay order through Postpay API was not successful. Postpay reference %1.',
+                    'Request for capturing through Postpay API was not successful. Postpay reference %1.',
                     $postpayOrderId
                 );
 
@@ -171,7 +171,7 @@ class Postpay extends AbstractMethod
             $decodedResponse = $response->json();
             if(!$decodedResponse) {
                 $errorMessage = __(
-                    'Unable to decode Postpay API response to request for capturing Postpay order. Postpay reference %1.',
+                    'Malformed Postpay API response to capture request. Postpay reference %1.',
                     $postpayOrderId
                 );
 
@@ -183,7 +183,7 @@ class Postpay extends AbstractMethod
                 || $decodedResponse['status'] !== CheckoutManagerInterface::STATUS_CAPTURED
             ) {
                 $errorMessage = __(
-                    'Capturing Postpay order through Postpay API was not successful. Postpay reference %1. Decoded response %2.',
+                    'Capturing through Postpay API was not successful. Postpay reference %1. Decoded response %2.',
                     $postpayOrderId,
                     $decodedResponse
                 );
@@ -196,7 +196,7 @@ class Postpay extends AbstractMethod
             $payment->setTransactionAdditionalInfo(
                 Transaction::RAW_DETAILS,
                 [
-                    'status' => CheckoutManagerInterface::STATUS_CAPTURED,
+                    'status' => $decodedResponse['status'],
                     'amount' => $amount
                 ]
             );
@@ -242,8 +242,9 @@ class Postpay extends AbstractMethod
 
             if(!in_array($response->getStatusCode(), [200, 201, 202])) {
                 $errorMessage = __(
-                    'Request for refunding Postpay order through Postpay API was not successful. Postpay reference %1.',
-                    $postpayOrderId
+                    'Request for refunding through Postpay API was not successful. Postpay reference %1. Refund reference %2.',
+                    $postpayOrderId,
+                    $postpayRefundId
                 );
 
                 throw new PostpayCheckoutApiException($errorMessage);
@@ -252,8 +253,9 @@ class Postpay extends AbstractMethod
             $decodedResponse = $response->json();
             if(!$decodedResponse) {
                 $errorMessage = __(
-                    'Unable to decode Postpay API response to request for refunding Postpay order. Postpay reference %1.',
-                    $postpayOrderId
+                    'Malformed Postpay API response to refund request. Postpay reference %1. Refund reference %2.',
+                    $postpayOrderId,
+                    $postpayRefundId
                 );
 
                 throw new PostpayCheckoutApiException($errorMessage);
@@ -262,7 +264,19 @@ class Postpay extends AbstractMethod
             $decodedResponse = $response->json();
             if(!isset($decodedResponse['amount'])) {
                 $errorMessage = __(
-                    'Refunding Postpay order through Postpay API was not successful. Postpay reference %1.',
+                    'Refunding through Postpay API was not successful. Postpay reference %1. Refund reference %2.',
+                    $postpayOrderId,
+                    $postpayRefundId
+                );
+
+                throw new PostpayCheckoutApiException($errorMessage);
+            }
+
+            $apiAmount = sprintf('%.4F', $decodedResponse['amount']);
+            $amount = sprintf('%.4F', $amount);
+            if($apiAmount !== $amount) {
+                $errorMessage = __(
+                    'Refunding requested amount through Postpay API was not successful. Postpay reference %1.',
                     $postpayOrderId
                 );
 
@@ -276,7 +290,7 @@ class Postpay extends AbstractMethod
             $payment->setTransactionAdditionalInfo(
                 Transaction::RAW_DETAILS,
                 [
-                    'amount' => $amount
+                    'Amount' => $decodedResponse['amount']
                 ]
             );
         } catch (Exception $e) {
