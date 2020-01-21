@@ -57,7 +57,7 @@ class PostpayWrapper implements PostpayWrapperInterface
         $this->config = $config;
         $this->logger = $logger;
 
-        $isActive = $this->config->getIsActive();
+        $isActive = $this->config->isActive();
         $merchantId = $this->config->getMerchantId();
         $secretKey = $this->config->getSecretKey();
         $sandboxSecretKey = $this->config->getSandboxSecretKey();

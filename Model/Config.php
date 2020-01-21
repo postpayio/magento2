@@ -187,7 +187,7 @@ class Config implements ConfigInterface
     /**
      * @return bool
      */
-    public function getIsActive(): bool
+    public function isActive(): bool
     {
         return (bool)$this->isSetFlag(self::XML_ACTIVE);
     }

@@ -34,6 +34,6 @@ class Cart implements ArgumentInterface
      */
     public function isCartWidgetEnabled(): bool
     {
-        return $this->config->isCartWidgetEnabled();
+        return $this->config->isActive() && $this->config->isCartWidgetEnabled();
     }
 }

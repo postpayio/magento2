@@ -34,6 +34,6 @@ class Product implements ArgumentInterface
      */
     public function isProductWidgetEnabled(): bool
     {
-        return $this->config->isProductWidgetEnabled();
+        return $this->config->isActive() && $this->config->isProductWidgetEnabled();
     }
 }

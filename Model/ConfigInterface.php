@@ -73,7 +73,7 @@ Interface ConfigInterface extends GatewayConfigInterface
     /**
      * @return bool
      */
-    public function getIsActive(): bool;
+    public function isActive(): bool;
 
     /**
      * @return string
