@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+Copyright © 2019 Postpay Technology Limited. All rights reserved.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="top.container">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="postpay.postpay.widget.product.top"
+                   template="Postpay_Postpay::widget/product.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Postpay\Postpay\Block\Widget\Product</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="product.info.addtocart">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="postpay.postpay.widget.product.bottom"
+                   template="Postpay_Postpay::widget/product.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Postpay\Postpay\Block\Widget\Product</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

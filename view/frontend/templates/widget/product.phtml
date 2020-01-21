@@ -1,0 +1,7 @@
+<?php
+/** @var \Postpay\Postpay\Block\Widget\Product $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<?php if($viewModel->isProductWidgetEnabled()): ?>
+    <div data-mage-init='{"postpayProductWidget": {}}'></div>
+<?php endif; ?>

@@ -235,7 +235,7 @@ class Config implements ConfigInterface
     /**
      * @return bool
      */
-    public function getIsProductWidget(): bool
+    public function isProductWidgetEnabled(): bool
     {
         return (bool)$this->isSetFlag(self::XML_PRODUCT_WIDGET);
     }
@@ -243,7 +243,7 @@ class Config implements ConfigInterface
     /**
      * @return bool
      */
-    public function getIsCartWidget(): bool
+    public function isCartWidgetEnabled(): bool
     {
         return (bool)$this->isSetFlag(self::XML_CART_WIDGET);
     }
@@ -251,7 +251,7 @@ class Config implements ConfigInterface
     /**
      * @return bool
      */
-    public function getIsAllowspecific(): bool
+    public function isAllowspecific(): bool
     {
         return (bool)$this->isSetFlag(self::XML_ALLOWSPECIFIC);
     }
@@ -275,7 +275,7 @@ class Config implements ConfigInterface
     /**
      * @inheritDoc
      */
-    public function getIsDebug(): bool
+    public function isDebug(): bool
     {
         return (bool)$this->isSetFlag(self::XML_DEBUG);
     }

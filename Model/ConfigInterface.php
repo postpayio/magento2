@@ -103,17 +103,17 @@ Interface ConfigInterface extends GatewayConfigInterface
     /**
      * @return bool
      */
-    public function getIsProductWidget(): bool;
+    public function isProductWidgetEnabled(): bool;
 
     /**
      * @return bool
      */
-    public function getIsCartWidget(): bool;
+    public function isCartWidgetEnabled(): bool;
 
     /**
      * @return bool
      */
-    public function getIsAllowspecific(): bool;
+    public function isAllowspecific(): bool;
 
     /**
      * @return array
@@ -128,5 +128,5 @@ Interface ConfigInterface extends GatewayConfigInterface
     /**
      * @return bool
      */
-    public function getIsDebug(): bool;
+    public function isDebug(): bool;
 }

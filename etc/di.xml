@@ -55,4 +55,16 @@ Copyright © 2019 Postpay Technology Limited. All rights reserved.
             <argument name="logger" xsi:type="object">PostpayPostpayLogger</argument>
         </arguments>
     </type>
+
+    <type name="Postpay\Postpay\Block\Widget\Cart">
+        <arguments>
+            <argument name="config" xsi:type="object">PostpayPostpayConfig</argument>
+        </arguments>
+    </type>
+
+    <type name="Postpay\Postpay\Block\Widget\Product">
+        <arguments>
+            <argument name="config" xsi:type="object">PostpayPostpayConfig</argument>
+        </arguments>
+    </type>
 </config>
