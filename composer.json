@@ -1,8 +1,17 @@
 {
-    "name": "postpay/module-postpay",
-    "description": "Postpay.io Integration for Magento 2",
+    "name": "postpay/magento2",
+    "description": "Postpay payment gateway for Magento 2",
     "type": "magento2-module",
-    "license": "proprietary",
+    "version": "0.0.1",
+    "homepage": "https://github.com/postpayio/magento2",
+    "keywords": [
+        "gateway",
+        "magento",
+        "magento2",
+        "module",
+        "payment",
+        "postpay"
+    ],
     "authors": [
         {
             "email": "info@devgenii.com",
@@ -10,7 +19,6 @@
             "homepage": "https://devgenii.com/"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "magento/module-checkout": "100.3.*",
         "magento/module-sales": "102.0.*",
