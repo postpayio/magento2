@@ -2,7 +2,9 @@
   <a href="https://github.com/postpayio/magento2/releases"><img src="https://img.shields.io/github/release/postpayio/magento2.svg" alt="Latest Version" /></a>
 </p>
 
-# Postpay payment gateway for Magento 2 
+# Postpay for Magento 2 
+
+Postpay Payment Gateway for Magento 2.
 
 ## Installation
 

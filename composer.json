@@ -1,6 +1,6 @@
 {
     "name": "postpay/magento2",
-    "description": "Postpay payment gateway for Magento 2",
+    "description": "Postpay Payment Gateway for Magento 2",
     "type": "magento2-module",
     "license": "MIT",
     "version": "0.0.1",
