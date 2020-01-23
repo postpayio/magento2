@@ -238,7 +238,7 @@ class CheckoutManager implements CheckoutManagerInterface
             $itemsEntityItem['image_url'] = $this->imageHelper
                 ->init($quoteItemProduct, 'image')
                 ->getUrl();
-            $itemsEntityItem['unit_price'] = $this->formatAmount($quoteItem->getBaseOriginalPrice());
+            $itemsEntityItem['unit_price'] = $this->formatAmount($quoteItem->getBasePrice());
             $itemsEntityItem['qty'] = $quoteItem->getQty();
             $itemsEntity[] = $itemsEntityItem;
 
