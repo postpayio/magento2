@@ -70,4 +70,10 @@ Interface CheckoutManagerInterface
      * @return string
      */
     public function generatePostpayRefundId(Order $order, float $amount): string;
+
+    /**
+     * @param int|string|float $amount
+     * @return float
+     */
+    public function formatDecimal($amount): float;
 }

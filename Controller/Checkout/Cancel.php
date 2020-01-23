@@ -113,7 +113,7 @@ class Cancel extends Action
 
             $this->messageManager->addErrorMessage(__('Postpay checkout cancelled.'));
 
-            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+            $redirectUrl = $this->_url->getUrl(ConfigInterface::CHECKOUT_CANCEL_ROUTE);
         }
 
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

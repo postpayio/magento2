@@ -127,7 +127,7 @@ class Capture extends Action
                 );
             }
 
-            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+            $redirectUrl = $this->_url->getUrl(ConfigInterface::CHECKOUT_CANCEL_ROUTE);
         }  catch (Exception $e) {
             $this->logger->debug([
                 'exception' => $e->getMessage()
@@ -139,7 +139,7 @@ class Capture extends Action
                 __('Unable to capture Postpay order.')
             );
 
-            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+            $redirectUrl = $this->_url->getUrl(ConfigInterface::CHECKOUT_CANCEL_ROUTE);
         }
 
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

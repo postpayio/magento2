@@ -272,8 +272,8 @@ class Postpay extends AbstractMethod
                 throw new PostpayCheckoutApiException($errorMessage);
             }
 
-            $apiAmount = sprintf('%.4F', $decodedResponse['amount']);
-            $amount = sprintf('%.4F', $amount);
+            $apiAmount = $this->checkoutManager->formatDecimal($decodedResponse['amount']);
+            $amount = $this->checkoutManager->formatDecimal($amount);
             if($apiAmount !== $amount) {
                 $errorMessage = __(
                     'Refunding requested amount through Postpay API was not successful. Postpay reference %1.',

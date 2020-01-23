@@ -207,10 +207,13 @@ class CheckoutManager implements CheckoutManagerInterface
             $shippingAddressEntity['line2'] = $shippingStreet[1];
         }
 
+        $quote->setTotalsCollectedFlag(false)->collectTotals();
+        $this->cartRepository->save($quote);
+
         $shippingEntity = [
             'id' => $shippingAddress->getShippingMethod(),
             'name' => $shippingAddress->getShippingDescription(),
-            'amount' => $shippingAddress->getShippingInclTax(),
+            'amount' => $this->formatDecimal($shippingAddress->getBaseShippingAmount()),
             'address' => $shippingAddressEntity,
         ];
 
@@ -235,8 +238,8 @@ class CheckoutManager implements CheckoutManagerInterface
             $itemsEntityItem['image_url'] = $this->imageHelper
                 ->init($quoteItemProduct, 'image')
                 ->getUrl();
-            $itemsEntityItem['unit_price'] = $quoteItem->getBasePriceInclTax();
-            $itemsEntityItem['qty'] = $quoteItem->getQty();
+            $itemsEntityItem['unit_price'] = $this->formatDecimal($quoteItem->getBaseOriginalPrice());
+            $itemsEntityItem['qty'] = $this->formatDecimal($quoteItem->getQty());
             $itemsEntity[] = $itemsEntityItem;
 
             $discountAmount += $quoteItem->getBaseDiscountAmount();
@@ -263,8 +266,8 @@ class CheckoutManager implements CheckoutManagerInterface
              */
             'order_id' => $postpayOrderId,
             'email' => $billingAddress->getEmail(),
-            'total_amount' => $quote->getBaseGrandTotal(),
-            'tax_amount' => $shippingAddress->getBaseTaxAmount(),
+            'total_amount' => $this->formatDecimal($quote->getBaseGrandTotal()),
+            'tax_amount' => $this->formatDecimal($shippingAddress->getBaseTaxAmount()),
             'currency' => $quote->getBaseCurrencyCode(),
             'shipping' => $shippingEntity,
             'billing_address' => $billingAddressEntity,
@@ -274,10 +277,10 @@ class CheckoutManager implements CheckoutManagerInterface
         ];
 
         if($discountAmount) {
-            $discountEntity = [
+            $discountEntity[] = [
                 'code' => $discountCode,
                 'name' => $discountName,
-                'amount' => $discountAmount
+                'amount' => $this->formatDecimal($discountAmount)
             ];
             $payload['discounts'] = $discountEntity;
         }
@@ -370,5 +373,14 @@ class CheckoutManager implements CheckoutManagerInterface
         );
 
         return  $this->encryptor->hash($postpayRefundId);
+    }
+
+    /**
+     * @param $amount
+     * @return float
+     */
+    public function formatDecimal($amount): float
+    {
+        return floatval(sprintf('%.4F', $amount));
     }
 }

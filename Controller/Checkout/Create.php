@@ -83,7 +83,8 @@ class Create extends Action
             }
         }  catch (PostpayException $e) {
             $this->logger->debug([
-                'exception' => $e->getMessage()
+                'exception' => $e->getMessage(),
+                'response' => $e->getResponse()->json()
             ]);
 
             $this->systemLogger->critical($e);
@@ -99,7 +100,7 @@ class Create extends Action
                 );
             }
 
-            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+            $redirectUrl = $this->_url->getUrl(ConfigInterface::CHECKOUT_CANCEL_ROUTE);
         }  catch (Exception $e) {
             $this->logger->debug([
                 'exception' => $e->getMessage()
@@ -109,7 +110,7 @@ class Create extends Action
 
             $this->messageManager->addErrorMessage(__('Creating Postpay checkout failed. Please try again.'));
 
-            $redirectUrl = ConfigInterface::CHECKOUT_CANCEL_ROUTE;
+            $redirectUrl = $this->_url->getUrl(ConfigInterface::CHECKOUT_CANCEL_ROUTE);
         }
 
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
