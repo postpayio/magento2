@@ -197,7 +197,7 @@ class Postpay extends AbstractMethod
                 Transaction::RAW_DETAILS,
                 [
                     'Status' => $decodedResponse['status'],
-                    'Amount' => $amount
+                    'Amount' => $decodedResponse['total_amount']
                 ]
             );
         } catch (Exception $e) {
@@ -237,7 +237,7 @@ class Postpay extends AbstractMethod
 
             $response = $this->postpayWrapper->post("/orders/$postpayOrderId/refunds", [
                 'refund_id' => $postpayRefundId,
-                'amount' => $amount
+                'amount' => $this->checkoutManager->formatAmount($amount)
             ]);
 
             if(!in_array($response->getStatusCode(), [200, 201, 202])) {
@@ -272,9 +272,9 @@ class Postpay extends AbstractMethod
                 throw new PostpayCheckoutApiException($errorMessage);
             }
 
-            $apiAmount = $this->checkoutManager->formatDecimal($decodedResponse['amount']);
-            $amount = $this->checkoutManager->formatDecimal($amount);
-            if($apiAmount !== $amount) {
+            $apiAmount = $decodedResponse['amount'];
+            $amount = $this->checkoutManager->formatAmount($amount);
+            if($apiAmount != $this->checkoutManager->formatAmount($amount)) {
                 $errorMessage = __(
                     'Refunding requested amount through Postpay API was not successful. Postpay reference %1.',
                     $postpayOrderId
@@ -290,7 +290,7 @@ class Postpay extends AbstractMethod
             $payment->setTransactionAdditionalInfo(
                 Transaction::RAW_DETAILS,
                 [
-                    'Amount' => $decodedResponse['amount']
+                    'Amount' => $apiAmount
                 ]
             );
         } catch (Exception $e) {

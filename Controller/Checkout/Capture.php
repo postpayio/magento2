@@ -130,7 +130,8 @@ class Capture extends Action
             $redirectUrl = $this->_url->getUrl(ConfigInterface::CHECKOUT_CANCEL_ROUTE);
         }  catch (Exception $e) {
             $this->logger->debug([
-                'exception' => $e->getMessage()
+                'exception' => $e->getMessage(),
+                'response' => $e->getResponse()->json()
             ]);
 
             $this->systemLogger->critical($e);

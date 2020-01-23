@@ -73,7 +73,7 @@ Interface CheckoutManagerInterface
 
     /**
      * @param int|string|float $amount
-     * @return float
+     * @return int
      */
-    public function formatDecimal($amount): float;
+    public function formatAmount($amount): int;
 }
