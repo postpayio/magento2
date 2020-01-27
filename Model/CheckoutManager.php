@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace Postpay\Postpay\Model;
 
+use DateTime;
+use Exception;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Magento\Checkout\Model\Type\Onepage;
@@ -27,6 +29,7 @@ use Postpay\Postpay\Exception\PostpayCheckoutOrderException;
 use Postpay\Postpay\Exception\PostpayConfigurationException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\QuoteManagement;
+use Magento\Customer\Api\AddressRepositoryInterface;
 
 /**
  * Class CheckoutManager
@@ -73,6 +76,11 @@ class CheckoutManager implements CheckoutManagerInterface
     private $checkoutHelper;
 
     /**
+     * @var AddressRepositoryInterface
+     */
+    private $addressRepository;
+
+    /**
      * CheckoutManager constructor.
      * @param Encryptor $encryptor
      * @param ImageHelper $imageHelper
@@ -82,6 +90,7 @@ class CheckoutManager implements CheckoutManagerInterface
      * @param QuoteManagement $quoteManagement
      * @param CustomerSession $customerSession
      * @param CheckoutHelper $checkoutHelper
+     * @param AddressRepositoryInterface $addressRepository
      */
     public function __construct(
         Encryptor $encryptor,
@@ -91,7 +100,8 @@ class CheckoutManager implements CheckoutManagerInterface
         CartRepositoryInterface $cartRepository,
         QuoteManagement $quoteManagement,
         CustomerSession $customerSession,
-        CheckoutHelper $checkoutHelper
+        CheckoutHelper $checkoutHelper,
+        AddressRepositoryInterface $addressRepository
     ) {
         $this->encryptor = $encryptor;
         $this->imageHelper = $imageHelper;
@@ -101,6 +111,7 @@ class CheckoutManager implements CheckoutManagerInterface
         $this->quoteManagement = $quoteManagement;
         $this->customerSession = $customerSession;
         $this->checkoutHelper = $checkoutHelper;
+        $this->addressRepository = $addressRepository;
     }
 
     /**
@@ -132,6 +143,7 @@ class CheckoutManager implements CheckoutManagerInterface
      * @throws PostpayException
      * @throws PostpayConfigurationException
      * @throws LocalizedException
+     * @throws Exception
      */
     public function create(Quote $quote): string
     {
@@ -218,10 +230,68 @@ class CheckoutManager implements CheckoutManagerInterface
         ];
 
         /** @var Customer $customer */
-        $customer = $quote->getCustomer();
+
         $customerEntity = [
-            'email' => $customer->getEmail() ?? $billingAddress->getEmail()
+            'email' => $billingAddress->getEmail(),
+            'first_name' => $billingAddress->getFirstname(),
+            'last_name' => $billingAddress->getLastname(),
+            'account' => 'guest'
         ];
+
+        if($this->customerSession->isLoggedIn()) {
+            $customer = $quote->getCustomer();
+            $magentoCustomerGender = $customer->getGender();
+            if($magentoCustomerGender) {
+                switch ($magentoCustomerGender) {
+                    case 1:
+                        $apiGender = 'male';
+                        break;
+                    case 2:
+                        $apiGender = 'female';
+                        break;
+                    case 3:
+                    default:
+                        $apiGender = 'other';
+                }
+                $customerEntity['gender'] = $apiGender;
+            }
+
+            $customerEntity['account'] = 'existing';
+
+            $magentoCustomerDob = $customer->getDob();
+            if($magentoCustomerDob) {
+                $dateTimeCustomerDob = new DateTime($magentoCustomerDob);
+                $customerEntity['date_of_birth'] = $dateTimeCustomerDob->format('Y-m-d');
+            }
+
+            $magentoCustomerCreatedAt = $customer->getCreatedAt();
+            if($magentoCustomerCreatedAt) {
+                $dateTimeCustomerCreatedAt = new DateTime($magentoCustomerCreatedAt);
+                $customerEntity['date_joined'] = $dateTimeCustomerCreatedAt->format(DateTime::ISO8601);
+            }
+
+            $magentoCustomerAddressId = $customer->getDefaultShipping();
+            if($magentoCustomerAddressId) {
+                $magentoCustomerAddress = $this->addressRepository->getById($magentoCustomerAddressId);
+                $magentoAddressStreet = $magentoCustomerAddress->getStreet();
+
+                $magentoAddressState = $magentoCustomerAddress->getRegion()->getRegionCode();
+                if(!$magentoAddressState) {
+                    $magentoAddressState = $magentoCustomerAddress->getCity();
+                }
+
+                $customerEntity['default_address'] = [
+                    'first_name' => $magentoCustomerAddress->getFirstname(),
+                    'last_name' => $magentoCustomerAddress->getLastname(),
+                    'phone' => $magentoCustomerAddress->getTelephone(),
+                    'line1' => $magentoAddressStreet[0],
+                    'city' => $magentoCustomerAddress->getCity(),
+                    'state' => $magentoAddressState,
+                    'country' => $magentoCustomerAddress->getCountryId(),
+                    'postal_code' => $magentoCustomerAddress->getPostcode()
+                ];
+            }
+        }
 
         $itemsEntity = [];
 
