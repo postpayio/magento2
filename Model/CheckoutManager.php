@@ -369,7 +369,7 @@ class CheckoutManager implements CheckoutManagerInterface
         $postpayRefundId = sprintf(
             'postpay_refund_id_%s_%.4f',
             $postpayOrderId,
-            ((float)$order->getBaseTotalPaid()-$order->getBaseTotalRefunded())
+            ((float)$order->getBaseTotalPaid()-(float)$order->getBaseTotalRefunded())
         );
 
         return  $this->encryptor->hash($postpayRefundId);
