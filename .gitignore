@@ -1,0 +1,15 @@
+*.*~
+*.db
+*.DS_Store
+*.box
+*.cer
+*.egg*
+*.log
+*.pem
+*.p12
+*.pyc
+*.sql
+*.xls
+
+composer.lock
+vendor/
