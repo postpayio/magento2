@@ -240,6 +240,8 @@ class CheckoutManager implements CheckoutManagerInterface
 
         if($this->customerSession->isLoggedIn()) {
             $customer = $quote->getCustomer();
+            $customerEntity['id'] = $customer->getId();
+
             $magentoCustomerGender = $customer->getGender();
             if($magentoCustomerGender) {
                 switch ($magentoCustomerGender) {
