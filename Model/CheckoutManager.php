@@ -30,6 +30,7 @@ use Postpay\Postpay\Exception\PostpayConfigurationException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\SalesRule\Api\RuleRepositoryInterface;
 
 /**
  * Class CheckoutManager
@@ -81,6 +82,11 @@ class CheckoutManager implements CheckoutManagerInterface
     private $addressRepository;
 
     /**
+     * @var RuleRepositoryInterface
+     */
+    private $ruleRepository;
+
+    /**
      * CheckoutManager constructor.
      * @param Encryptor $encryptor
      * @param ImageHelper $imageHelper
@@ -91,6 +97,7 @@ class CheckoutManager implements CheckoutManagerInterface
      * @param CustomerSession $customerSession
      * @param CheckoutHelper $checkoutHelper
      * @param AddressRepositoryInterface $addressRepository
+     * @param RuleRepositoryInterface $ruleRepository
      */
     public function __construct(
         Encryptor $encryptor,
@@ -101,7 +108,8 @@ class CheckoutManager implements CheckoutManagerInterface
         QuoteManagement $quoteManagement,
         CustomerSession $customerSession,
         CheckoutHelper $checkoutHelper,
-        AddressRepositoryInterface $addressRepository
+        AddressRepositoryInterface $addressRepository,
+        RuleRepositoryInterface $ruleRepository
     ) {
         $this->encryptor = $encryptor;
         $this->imageHelper = $imageHelper;
@@ -112,6 +120,7 @@ class CheckoutManager implements CheckoutManagerInterface
         $this->customerSession = $customerSession;
         $this->checkoutHelper = $checkoutHelper;
         $this->addressRepository = $addressRepository;
+        $this->ruleRepository = $ruleRepository;
     }
 
     /**
@@ -296,10 +305,8 @@ class CheckoutManager implements CheckoutManagerInterface
         }
 
         $itemsEntity = [];
+        $discountsEntity = [];
 
-        $discountCode = null;
-        $discountName = null;
-        $discountAmount = 0;
         /** @var Item $quoteItem */
         foreach ($quoteItems as $quoteItem) {
             $itemsEntityItem = [];
@@ -314,8 +321,18 @@ class CheckoutManager implements CheckoutManagerInterface
             $itemsEntityItem['qty'] = $quoteItem->getQty();
             $itemsEntity[] = $itemsEntityItem;
 
-            $discountAmount += $quoteItem->getBaseDiscountAmount();
-            $discountCode = $discountName = $quote->getCouponCode();
+            $discountRuleIds = explode(',', $quoteItem->getAppliedRuleIds());
+            $discountAmount = $quoteItem->getBaseDiscountAmount();
+            if($discountRuleIds && $discountAmount) {
+                foreach ($discountRuleIds as $discountRuleId) {
+                    $discountRule = $this->ruleRepository->getById($discountRuleId);
+                    $discountsEntity[] = [
+                        'code' => $discountRule->getRuleId(),
+                        'name' => $discountRule->getName(),
+                        'amount' => $this->formatAmount($discountAmount)
+                    ];
+                }
+            }
         }
 
         $merchantEntity = [
@@ -325,7 +342,7 @@ class CheckoutManager implements CheckoutManagerInterface
              */
             'confirmation_url' => $this->url->getUrl(ConfigInterface::POSTPAY_CHECKOUT_CAPTURE_ROUTE),
 
-            /**
+            /*
              * URL that the customer is sent to if the payment process is cancelled. A status will be sent to this URL
              * as a HTTP query parameter, options are CANCELLED, DENIED.
              */
@@ -348,13 +365,8 @@ class CheckoutManager implements CheckoutManagerInterface
             'merchant' => $merchantEntity
         ];
 
-        if($discountAmount) {
-            $discountEntity[] = [
-                'code' => $discountCode,
-                'name' => $discountName,
-                'amount' => $this->formatAmount($discountAmount)
-            ];
-            $payload['discounts'] = $discountEntity;
+        if($discountsEntity) {
+            $payload['discounts'] = $discountsEntity;
         }
 
         $response = $this->postpayWrapper->post('/checkouts', $payload);
