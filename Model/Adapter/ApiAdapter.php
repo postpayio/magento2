@@ -81,21 +81,21 @@ class ApiAdapter
      * @throws ApiException
      */
     public function request($method, $path, array $params = [])
-    {        
+    {
         try {
-            /** @var \Postpay\Http\Response $response */
-            $response = $this->client->request($method, $path, $params);
+            $response = $this->client->request($method, $path, $params)->json();
         } catch (ApiException $e) {
             $this->logger->critical($e->getMessage());
+            $response = [];
             throw $e;
         } finally {
             $this->customLogger->debug([
                 'path' => $path,
                 'request' => $params,
-                'response' => $response->json()
+                'response' => $response
             ]);
         }
-        return $response->json();
+        return $response;
     }
 
     /**
