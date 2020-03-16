@@ -26,6 +26,14 @@ class Product extends AbstractProduct
      */
     private $priceCurrency;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param Config $config
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Config $config,
@@ -37,21 +45,41 @@ class Product extends AbstractProduct
         $this->priceCurrency = $priceCurrency;
     }
 
+    /**
+     * Check if sandbox field is enabled.
+     *
+     * @return bool
+     */
     public function isSandbox()
     {
         return $this->config->isSandbox();
     }
 
+    /**
+     * Get merchant ID.
+     *
+     * @return string
+     */
     public function getMerchantId()
     {
         return $this->config->getMerchantId();
     }
 
+    /**
+     * Get currency code.
+     *
+     * @return string
+     */
     public function getCurrencyCode()
     {
         return $this->priceCurrency->getCurrency()->getCurrencyCode();
     }
 
+    /**
+     * Get product final price.
+     *
+     * @return int
+     */
     public function getFinalPrice()
     {
         return ApiAdapter::decimal($this->getProduct()->getFinalPrice());

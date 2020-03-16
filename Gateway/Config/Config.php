@@ -37,7 +37,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
-     * Checks if sandbox field is enabled.
+     * Check if sandbox field is enabled.
      *
      * @param int|null $storeId
      *
@@ -49,7 +49,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
-     * Gets merchant ID.
+     * Get merchant ID.
      *
      * @param int|null $storeId
      *
@@ -61,11 +61,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
-     * Gets private api key.
+     * Get private api key.
      *
-     * @return mixed
-     *
-     * @return void
+     * @return string
      */
     public function getSecretKey()
     {
@@ -75,7 +73,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
-     * Gets Payment configuration status.
+     * Get payment configuration status.
      *
      * @param int|null $storeId
      *
@@ -87,7 +85,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
-     * Checks if product widget is enabled.
+     * Check if product widget is enabled.
      *
      * @param int|null $storeId
      *
