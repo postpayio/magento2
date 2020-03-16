@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
-<!--
-Copyright © 2019 Postpay Technology Limited. All rights reserved.
--->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="postpay_postpay_config" xsi:type="object">Postpay\Postpay\Model\Ui\ConfigProvider</item>
+                <item name="postpay_payment_config" xsi:type="object">Postpay\Payment\Model\Ui\ConfigProvider</item>
             </argument>
         </arguments>
     </type>

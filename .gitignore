@@ -12,4 +12,5 @@
 *.xls
 
 composer.lock
+sftp-config.json
 vendor/

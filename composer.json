@@ -16,8 +16,7 @@
     "authors": [
         {
             "email": "info@devgenii.com",
-            "name": "DevGenii",
-            "homepage": "https://devgenii.com/"
+            "name": "DevGenii"
         }
     ],
     "require": {
@@ -30,7 +29,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Postpay\\Postpay\\": ""
+            "Postpay\\Payment\\": ""
         },
         "files": [
             "registration.php"

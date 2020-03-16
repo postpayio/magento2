@@ -1,39 +1,56 @@
 <?php
-/**
- * Copyright © 2019 Postpay Technology Limited. All rights reserved.
- */
-declare(strict_types=1);
 
-namespace Postpay\Postpay\Block\Widget;
+namespace Postpay\Payment\Block\Widget;
 
-use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Postpay\Postpay\Model\ConfigInterface;
+use Magento\Catalog\Block\Product\AbstractProduct;
+use Magento\Catalog\Block\Product\Context;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Postpay\Payment\Gateway\Config\Config;
+use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
  * Class Product
- * @package Postpay\Postpay\Block\Widget
  */
-class Product implements ArgumentInterface
+class Product extends AbstractProduct
 {
     /**
-     * @var ConfigInterface
+     * @var Config
      */
     private $config;
 
     /**
-     * Cart constructor.
-     * @param ConfigInterface $config
+     * @var PriceCurrencyInterface
      */
-    public function __construct(ConfigInterface $config)
-    {
+    private $priceCurrency;
+
+    public function __construct(
+        Context $context,
+        Config $config,
+        PriceCurrencyInterface $priceCurrency,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
         $this->config = $config;
+        $this->priceCurrency = $priceCurrency;
     }
 
-    /**
-     * @return bool
-     */
-    public function isProductWidgetEnabled(): bool
+    public function isSandbox()
     {
-        return $this->config->isActive() && $this->config->isProductWidgetEnabled();
+        return $this->config->isSandbox();
+    }
+
+    public function getMerchantId()
+    {
+        return $this->config->getMerchantId();
+    }
+
+    public function getCurrencyCode()
+    {
+        return $this->priceCurrency->getCurrency()->getCurrencyCode();
+    }
+
+    public function getFinalPrice()
+    {
+        return ApiAdapter::decimal($this->getProduct()->getFinalPrice());
     }
 }

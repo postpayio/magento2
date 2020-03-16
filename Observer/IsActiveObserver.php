@@ -1,31 +1,27 @@
 <?php
-/**
- * Copyright © 2019 Postpay Technology Limited. All rights reserved.
- */
-declare(strict_types=1);
 
-namespace Postpay\Postpay\Observer;
+namespace Postpay\Payment\Observer;
 
-use Magento\Framework\DataObject;
-use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
-use Postpay\Postpay\Model\Payment\Postpay;
+use Magento\Framework\Event\ObserverInterface;
+use Postpay\Payment\Model\Payment\Postpay;
 
 /**
- * Class MethodIsActiveObserver
- * @package Postpay\Postpay\Observer
+ * Class IsActiveObserver
  */
-class MethodIsActiveObserver implements ObserverInterface
+class IsActiveObserver implements ObserverInterface
 {
     /**
      * @param EventObserver $observer
+     *
+     * @return void
      */
     public function execute(EventObserver $observer)
     {
         $event = $observer->getEvent();
         $methodInstance = $event->getMethodInstance();
         if ($methodInstance instanceof Postpay) {
-            /** @var DataObject $result */
+            /** @var \Magento\Framework\DataObject $result */
             $result = $observer->getEvent()->getResult();
             $result->setData('is_available', false);
         }

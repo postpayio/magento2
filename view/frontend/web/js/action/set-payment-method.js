@@ -1,7 +1,3 @@
-/**
- * Copyright © 2019 Postpay Technology Limited. All rights reserved.
- */
-
 define([
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/action/set-payment-information'

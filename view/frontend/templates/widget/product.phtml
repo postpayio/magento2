@@ -1,7 +1,15 @@
 <?php
-/** @var \Postpay\Postpay\Block\Widget\Product $viewModel */
-$viewModel = $block->getViewModel();
+$config = [
+    'merchantId' => $block->getmerchantId(),
+    'sandbox' => $block->isSandbox()
+];
 ?>
-<?php if($viewModel->isProductWidgetEnabled()): ?>
-    <div data-mage-init='{"postpayProductWidget": {}}'></div>
-<?php endif; ?>
+
+<div data-mage-init='{"postpayWidget": <?= $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($config) ?>}'>
+    <div
+        class="postpay-widget"
+        data-type="product"
+        data-amount="<?php echo $block->getFinalPrice(); ?>",
+        data-currency="<?php echo $block->getCurrencyCode(); ?>"
+    ></div>
+</div>

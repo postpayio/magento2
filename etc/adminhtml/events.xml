@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
-<!--
-Copyright © 2019 Postpay Technology Limited. All rights reserved.
--->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_is_active">
-        <observer name="postpay_postpay_payment_method_is_active"
-                  instance="Postpay\Postpay\Observer\MethodIsActiveObserver" />
+        <observer name="postpay_payment_payment_method_is_active" instance="Postpay\Payment\Observer\IsActiveObserver" />
     </event>
 </config>
