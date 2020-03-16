@@ -1,3 +1,7 @@
+/**
+ * Copyright © Postpay. All rights reserved.
+ * See LICENSE for license details.
+ */
 define([
     'uiComponent',
     'Magento_Checkout/js/model/payment/renderer-list'

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Postpay. All rights reserved.
+ * See LICENSE for license details.
+ */
 namespace Postpay\Payment\Model\Request;
 
 use Magento\Customer\Api\Data\CustomerInterface;

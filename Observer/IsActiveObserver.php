@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright © Postpay. All rights reserved.
+ * See LICENSE for license details.
+ */
 namespace Postpay\Payment\Observer;
 
 use Magento\Framework\Event\Observer as EventObserver;

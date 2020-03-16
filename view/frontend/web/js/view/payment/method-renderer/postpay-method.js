@@ -1,3 +1,7 @@
+/**
+ * Copyright © Postpay. All rights reserved.
+ * See LICENSE for license details.
+ */
 define([
     'jquery',
     'Magento_Checkout/js/view/payment/default',

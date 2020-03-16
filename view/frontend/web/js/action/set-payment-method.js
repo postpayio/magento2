@@ -1,3 +1,7 @@
+/**
+ * Copyright © Postpay. All rights reserved.
+ * See LICENSE for license details.
+ */
 define([
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/action/set-payment-information'

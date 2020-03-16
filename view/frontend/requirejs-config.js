@@ -1,3 +1,7 @@
+/**
+ * Copyright © Postpay. All rights reserved.
+ * See LICENSE for license details.
+ */
 var config = {
     map: {
         '*': {
