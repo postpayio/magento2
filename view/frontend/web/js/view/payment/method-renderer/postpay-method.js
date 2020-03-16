@@ -1,7 +1,7 @@
 define([
     'jquery',
     'Magento_Checkout/js/view/payment/default',
-    'Postpay_Postpay/js/action/set-payment-method',
+    'Postpay_Payment/js/action/set-payment-method',
     'Magento_Checkout/js/model/payment/additional-validators',
     'Magento_Customer/js/customer-data'
 ], function (

@@ -41,7 +41,7 @@ class Checkout
             'billing_address' => Address::build($billing),
             'customer' => $customer,
             'items' => array_map(
-                'Postpay\Payment\Model\Checkout\Item::build',
+                'Postpay\Payment\Model\Request\Item::build',
                 $quote->getAllVisibleItems()
             ),
             'merchant' => [
