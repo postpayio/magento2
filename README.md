@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/postpayio/magento2/releases"><img src="https://img.shields.io/github/release/postpayio/magento2.svg" alt="Latest Version"/></a>
+  <a href="https://github.com/postpayio/magento2/releases"><img src="https://img.shields.io/github/release/postpayio/magento2.svg" alt="Latest Version"/></a> <a href="https://travis-ci.org/postpayio/magento2"><img src="https://img.shields.io/travis/postpayio/magento2.svg" alt="Build Status"/></a>
 </p>
 
 # Postpay for Magento 2 
