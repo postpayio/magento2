@@ -1,0 +1,16 @@
+"Postpay checkout has been canceled.","Postpay checkout has been canceled."
+"Capture error. Id %1. Code: %2.","Capture error. Id %1. Code: %2."
+"Checkout error. Id: %1. Code: %2.","Checkout error. Id: %1. Code: %2."
+"Continue to Postpay","Continue to Postpay"
+Postpay,Postpay
+Enabled,Enabled
+Title,Title
+"Test (sandbox)","Test (sandbox)"
+"Merchant ID","Merchant ID"
+"Secret Key","Secret Key"
+"Test Secret Key","Test Secret Key"
+"Product Widget","Product Widget"
+"Payment from Applicable Countries","Payment from Applicable Countries"
+"Payment from Specific Countries","Payment from Specific Countries"
+"Sort Order","Sort Order"
+Debug,Debug
