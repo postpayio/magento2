@@ -6,6 +6,7 @@
 namespace Postpay\Payment\Model\Request;
 
 use Magento\Catalog\Helper\Image;
+use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\App\ObjectManager;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
@@ -24,15 +25,17 @@ class Item
      */
     public static function build(QuoteItem $item)
     {
-        $product = $item->getProduct();
         $objectManager = ObjectManager::getInstance();
+        /** @var ProductFactory $productFactory */
+        $productFactory = $objectManager->get(ProductFactory::class);
+        $product = $productFactory->create()->load($item->getProductId());
         /** @var Image $imageHelper */
         $imageHelper = $objectManager->get(Image::class);
 
         return [
             'reference' => $item->getId(),
             'name' => $item->getName(),
-            'description' => $product->getDescription() ?: 'TODO',
+            'description' => substr($product->getDescription(), 0, 1024),
             'url' => $product->getProductUrl(),
             'image_url' => $imageHelper->init($product, 'product_base_image')->getUrl(),
             'unit_price' => ApiAdapter::decimal($item->getBasePrice()),
