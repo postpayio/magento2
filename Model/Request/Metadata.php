@@ -34,7 +34,8 @@ class Metadata
                 'version' => $productMetadata->getVersion()
             ],
             'module' => [
-                'name' => 'postpay/magento2',
+                'name' => $module['name'],
+                'package' => 'postpay/magento2',
                 'version' => $module['setup_version']
             ]
         ];
