@@ -27,10 +27,11 @@ class Metadata
         /** @var ModuleListInterface $moduleList */
         $moduleList = $objectManager->get(ModuleListInterface::class);
         $module = $moduleList->getOne('Postpay_Payment');
-
+        
         return [
             'platform' => [
-                'name' => 'magento',
+                'name' => $productMetadata->getName(),
+                'edition' => $productMetadata->getEdition(),
                 'version' => $productMetadata->getVersion()
             ],
             'module' => [
