@@ -26,9 +26,9 @@ class Address
             'last_name' => $address->getLastname(),
             'phone' => $address->getTelephone(),
             'line1' => $address->getStreetLine(1),
-            'line2' => $address->getStreetLine(2),
+            'line2' => $address->getStreetLine(2) ?: '',
             'city' => $address->getCity(),
-            'state' => $address->getRegionCode() ?: 'TODO',
+            'state' => $address->getRegionCode() ?: '',
             'country' => $address->getCountryId(),
             'postal_code' => $address->getPostcode()
         ];

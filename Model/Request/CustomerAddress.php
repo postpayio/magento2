@@ -30,7 +30,7 @@ class CustomerAddress
             'line1' => $street[0],
             'line2' => isset($street[1]) ? $street[1] : '',
             'city' => $address->getCity(),
-            'state' => $address->getRegion()->getRegionCode() ?: 'TODO',
+            'state' => $address->getRegion()->getRegionCode() ?: '',
             'country' => $address->getCountryId(),
             'postal_code' => $address->getPostcode()
         ];
