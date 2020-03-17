@@ -10,9 +10,9 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Postpay\Exceptions\ApiException;
-use Postpay\Payment\Model\Request\Checkout;
-use Postpay\Payment\Model\Postpay;
 use Postpay\Payment\Model\Adapter\AdapterInterface;
+use Postpay\Payment\Model\Postpay;
+use Postpay\Payment\Model\Request\Checkout;
 
 /**
  * Class Redirect

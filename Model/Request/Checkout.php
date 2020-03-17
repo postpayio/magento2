@@ -5,8 +5,6 @@
  */
 namespace Postpay\Payment\Model\Request;
 
-use Magento\Checkout\Model\Type\Onepage;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\ObjectManager;
 use Magento\Quote\Model\Quote;
 use Postpay\Payment\Model\Adapter\ApiAdapter;

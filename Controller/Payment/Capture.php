@@ -12,7 +12,6 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Quote\Api\CartManagementInterface;
-use Magento\Quote\Model\Quote;
 use Postpay\Exceptions\ApiException;
 use Postpay\Payment\Model\Postpay;
 
