@@ -54,6 +54,13 @@ class Checkout
         ];
     }
 
+    /**
+     * Get absolute url.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     public static function getUrl($path)
     {
         $objectManager = ObjectManager::getInstance();
