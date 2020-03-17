@@ -28,7 +28,7 @@ class CustomerAddress
             'last_name' => $address->getLastname(),
             'phone' => $address->getTelephone(),
             'line1' => $street[0],
-            'line2' => isset($street[1]) ? $street[1]: '',
+            'line2' => isset($street[1]) ? $street[1] : '',
             'city' => $address->getCity(),
             'state' => $address->getRegion()->getRegionCode() ?: 'TODO',
             'country' => $address->getCountryId(),

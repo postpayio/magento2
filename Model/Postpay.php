@@ -130,14 +130,14 @@ class Postpay extends AbstractMethod
      */
     public function capture(InfoInterface $payment, $amount)
     {
-        $order = $payment->getOrder();
         $id = $payment->getAdditionalInformation(self::TRANSACTION_ID_KEY);
         $response = $this->postpayAdapter->capture($id);
 
         $payment->setTransactionId($id);
         $payment->setIsTransactionClosed(false);
         $payment->setTransactionAdditionalInfo(
-            Transaction::RAW_DETAILS, [
+            Transaction::RAW_DETAILS,
+            [
                 'Status' => $response['status'],
                 'Amount' => $response['total_amount'] / 100
             ]

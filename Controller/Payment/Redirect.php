@@ -36,7 +36,7 @@ class Redirect extends Action
 
     /**
      * Constructor.
-     * 
+     *
      * @param Context $context
      * @param Session $checkoutSession
      * @param CartRepositoryInterface $quoteRepository
