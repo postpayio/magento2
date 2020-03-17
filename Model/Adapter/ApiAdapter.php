@@ -73,7 +73,7 @@ class ApiAdapter
     }
 
     /**
-     * Send a request to API and returns the response.
+     * Send a request to API and return the response.
      *
      * @param string $method
      * @param string $path
