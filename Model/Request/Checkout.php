@@ -49,7 +49,8 @@ class Checkout
             'merchant' => [
                 'confirmation_url' => self::getUrl('postpay/payment/capture'),
                 'cancel_url' => self::getUrl('postpay/payment/cancel')
-            ]
+            ],
+            'metadata' => Metadata::build()
         ];
     }
 
