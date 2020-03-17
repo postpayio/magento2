@@ -3,7 +3,7 @@
     "description": "Postpay Payment Gateway for Magento 2",
     "type": "magento2-module",
     "license": "BSD-3-Clause",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "homepage": "https://github.com/postpayio/magento2",
     "keywords": ["gateway", "magento", "magento2", "payment", "postpay"],
     "authors": [
