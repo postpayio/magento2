@@ -29,6 +29,9 @@ class Metadata
         $module = $moduleList->getOne('Postpay_Payment');
         
         return [
+            'php' => [
+                'version' => phpversion()
+            ],
             'platform' => [
                 'name' => $productMetadata->getName(),
                 'edition' => $productMetadata->getEdition(),
