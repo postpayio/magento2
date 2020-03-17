@@ -6,6 +6,7 @@
 namespace Postpay\Payment\Model\Request;
 
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Url;
 use Magento\Quote\Model\Quote;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
@@ -62,6 +63,6 @@ class Checkout
     public static function getUrl($path)
     {
         $objectManager = ObjectManager::getInstance();
-        return $objectManager->get('Magento\Framework\Url')->getUrl($path);
+        return $objectManager->get(Url::class)->getUrl($path);
     }
 }

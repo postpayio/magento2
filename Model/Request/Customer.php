@@ -5,6 +5,7 @@
  */
 namespace Postpay\Payment\Model\Request;
 
+use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\App\ObjectManager;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
@@ -54,8 +55,9 @@ class Customer
 
         if ($defaultAddressId = $customer->getDefaultShipping()) {
             $objectManager = ObjectManager::getInstance();
+            /** @var AddressRepositoryInterface $addressRepository */
             $addressRepository = $objectManager->get(
-                'Magento\Customer\Api\AddressRepositoryInterface'
+                AddressRepositoryInterface::class
             );
             /** @var \Magento\Customer\Model\Data\Address $defaultAddress */
             $defaultAddress = $addressRepository->getById($defaultAddressId);
