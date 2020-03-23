@@ -7,8 +7,8 @@
 -->
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP_CodeSniffer"
          xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
-    <exclude-pattern type="relative">vendor/*</exclude-pattern>
     <file>.</file>
+    <exclude-pattern type="relative">vendor/*</exclude-pattern>
     <arg value="p"/>
     <arg value="n"/>
     <rule ref="Magento2"/>
