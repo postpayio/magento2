@@ -140,7 +140,7 @@ class Postpay extends AbstractMethod
             Transaction::RAW_DETAILS,
             [
                 'Status' => $response['status'],
-                'Amount' => new Decimal($response['total_amount'])->toFloat()
+                'Amount' => (new Decimal($response['total_amount']))->toFloat()
             ]
         );
         return $this;
