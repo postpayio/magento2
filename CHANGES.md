@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+* Added postpay-php serializers
+
 ## 0.1.0
 
 * Renamed the module to Postpay_Payment
