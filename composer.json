@@ -28,7 +28,7 @@
     ],
     "require": {
         "magento/framework": "*",
-        "postpay/postpay-php": "~0.0.3",
+        "postpay/postpay-php": "~0.0.4",
         "guzzlehttp/guzzle": "^6.0"
     },
     "require-dev": {

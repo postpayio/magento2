@@ -5,10 +5,13 @@
  */
 namespace Postpay\Payment\Model\Adapter;
 
+use DateTime;
 use Magento\Payment\Model\Method\Logger;
 use Postpay\Exceptions\ApiException;
 use Postpay\Payment\Gateway\Config\Config;
 use Postpay\PostpayFactory;
+use Postpay\Serializers\Decimal;
+use Postpay\Serializers\Date;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -16,9 +19,6 @@ use Psr\Log\LoggerInterface;
  */
 class ApiAdapter
 {
-    const ISO_DATE_FORMAT = 'Y-m-d';
-    const ISO_DATETIME_FORMAT = \DateTime::ISO8601;
-
     /**
      * @var \Postpay\Payment
      */
@@ -111,7 +111,7 @@ class ApiAdapter
      */
     public static function decimal($value)
     {
-        return (int) round($value * 100);
+        return Decimal::fromFloat($value);
     }
 
     /**
@@ -123,7 +123,7 @@ class ApiAdapter
      */
     public static function date($value)
     {
-        return (new \DateTime($value))->format(self::ISO_DATE_FORMAT);
+        return Date::fromDate(new DateTime($value));
     }
 
     /**
@@ -135,6 +135,6 @@ class ApiAdapter
      */
     public static function datetime($value)
     {
-        return (new \DateTime($value))->format(self::ISO_DATETIME_FORMAT);
+        return Date::fromDateTime(new DateTime($value));
     }
 }

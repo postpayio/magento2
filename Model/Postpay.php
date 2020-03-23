@@ -19,6 +19,7 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Postpay\Payment\Gateway\Config\Config;
 use Postpay\Payment\Model\Adapter\AdapterInterface;
+use Postpay\Serializers\Decimal;
 
 /**
  * Class Postpay
@@ -139,7 +140,7 @@ class Postpay extends AbstractMethod
             Transaction::RAW_DETAILS,
             [
                 'Status' => $response['status'],
-                'Amount' => $response['total_amount'] / 100
+                'Amount' => new Decimal($response['total_amount'])->toFloat()
             ]
         );
         return $this;
