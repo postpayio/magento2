@@ -103,11 +103,11 @@ class ApiAdapter
     }
 
     /**
-     * Convert float to decimal.
+     * Convert float to JSON serializable instance.
      *
      * @param float $value
      *
-     * @return int
+     * @return Decimal
      */
     public static function decimal($value)
     {
@@ -115,11 +115,11 @@ class ApiAdapter
     }
 
     /**
-     * Convert date to ApiAdapter::ISO_DATE_FORMAT.
+     * Convert date to JSON serializable instance.
      *
      * @param string $value
      *
-     * @return string
+     * @return Date
      */
     public static function date($value)
     {
@@ -127,11 +127,11 @@ class ApiAdapter
     }
 
     /**
-     * Convert date to ApiAdapter::ISO_DATETIME_FORMAT.
+     * Convert datetime to JSON serializable instance.
      *
      * @param string $value
      *
-     * @return string
+     * @return Date
      */
     public static function datetime($value)
     {
