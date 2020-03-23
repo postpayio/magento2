@@ -20,6 +20,10 @@
             "name": "Marko Martinovic"
         }
     ],
+    "support": {
+        "source": "https://github.com/postpay.io/woocommerce",
+        "issues": "https://github.com/postpay.io/woocommerce/issues"
+    },
     "repositories": [
         {
             "type": "composer",
