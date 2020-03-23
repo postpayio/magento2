@@ -59,6 +59,7 @@ class Redirect extends Action
      */
     public function execute()
     {
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->checkoutSession->getQuote();
         $quote->collectTotals()->reserveOrderId();
         $id = $quote->getReservedOrderId() . '-' . uniqid();
@@ -74,6 +75,7 @@ class Redirect extends Action
             $this->_redirect('checkout/cart');
             return;
         }
+        /** @var \Magento\Quote\Model\Quote\Payment $payment */
         $payment = $quote->getPayment();
         $payment->setAdditionalInformation(Postpay::TRANSACTION_ID_KEY, $id);
 

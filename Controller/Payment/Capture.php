@@ -68,7 +68,9 @@ class Capture extends Action
      */
     public function execute()
     {
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->checkoutSession->getQuote();
+        /** @var \Magento\Quote\Model\Quote\Payment $payment */
         $payment = $quote->getPayment();
         $id = $payment->getAdditionalInformation(Postpay::TRANSACTION_ID_KEY);
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
