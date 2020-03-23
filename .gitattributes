@@ -1,2 +1,9 @@
 *.phtml linguist-language=PHP
 *.html linguist-language=PHP
+
+.gitattributes export-ignore
+.gitignore export-ignore
+.php_cs.dist export-ignore
+.travis.yml export-ignore
+auth.json.enc export-ignore
+phpcs.xml.dist export-ignore
