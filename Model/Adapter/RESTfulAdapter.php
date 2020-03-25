@@ -11,7 +11,7 @@ namespace Postpay\Payment\Model\Adapter;
 class RESTfulAdapter extends ApiAdapter implements AdapterInterface
 {
     /**
-     * Send a POST request to API and return the response.
+     * Send a POST request and return the response.
      *
      * @param string $path
      * @param array $params
