@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+* Fixed Decimal instance to str
+
 ## 0.1.1
 
 * Added postpay-php serializers
