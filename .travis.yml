@@ -23,7 +23,7 @@ before_install:
           -out auth.json
 
 install:
-    - travis_retry composer install
+    - travis_retry composer install -n --prefer-dist
 
 script:
     - composer run-script phpcs
