@@ -18,7 +18,7 @@ $config = [
     <div
         class="postpay-widget"
         data-type="product"
-        data-amount="<?php echo $block->getFinalPrice(); ?>",
+        data-amount="<?php echo $block->getFinalPrice()->jsonSerialize(); ?>",
         data-currency="<?php echo $block->getCurrencyCode(); ?>"
     ></div>
 </div>
