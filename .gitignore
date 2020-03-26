@@ -11,6 +11,7 @@
 *.sql
 *.xls
 
+.dist
 .php_cs.cache
 composer.lock
 sftp-config.json
