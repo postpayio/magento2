@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+* Added locales
+
 ## 0.1.2
 
 * Fixed Decimal instance to str
