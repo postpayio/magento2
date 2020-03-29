@@ -9,7 +9,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 
 /**
- * Class Cancel
+ * Add cancelation message and provide redirect to cart page.
  */
 class Cancel extends Action
 {

@@ -12,7 +12,7 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
- * Class Item
+ * Add item information to checkout request.
  */
 class Item
 {

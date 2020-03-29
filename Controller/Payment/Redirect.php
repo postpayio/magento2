@@ -15,7 +15,7 @@ use Postpay\Payment\Model\Postpay;
 use Postpay\Payment\Model\Request\Checkout;
 
 /**
- * Class Redirect
+ * Provide redirect to Postpay checkout.
  */
 class Redirect extends Action
 {

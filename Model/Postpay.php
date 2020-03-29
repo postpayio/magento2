@@ -22,7 +22,7 @@ use Postpay\Payment\Model\Adapter\AdapterInterface;
 use Postpay\Serializers\Decimal;
 
 /**
- * Class Postpay
+ * Postpay payment method.
  */
 class Postpay extends AbstractMethod
 {

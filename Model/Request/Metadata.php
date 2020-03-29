@@ -10,7 +10,7 @@ use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
 
 /**
- * Class Metadata
+ * Add metadata to checkout request.
  */
 class Metadata
 {

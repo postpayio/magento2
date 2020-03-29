@@ -6,7 +6,7 @@
 namespace Postpay\Payment\Model\Adapter;
 
 /**
- * Class RESTfulAdapter
+ * Postpay RESTful Adapter.
  */
 class RESTfulAdapter extends ApiAdapter implements AdapterInterface
 {

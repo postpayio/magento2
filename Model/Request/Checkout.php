@@ -11,7 +11,7 @@ use Magento\Quote\Model\Quote;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
- * Class Checkout
+ * Add checkout information to checkout request.
  */
 class Checkout
 {

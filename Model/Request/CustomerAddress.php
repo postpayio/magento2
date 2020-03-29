@@ -8,7 +8,7 @@ namespace Postpay\Payment\Model\Request;
 use Magento\Customer\Model\Data\Address;
 
 /**
- * Class CustomerAddress
+ * Add customer address information to checkout request.
  */
 class CustomerAddress
 {

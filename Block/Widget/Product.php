@@ -12,7 +12,7 @@ use Postpay\Payment\Gateway\Config\Config;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
- * Class Product
+ * Product widget block.
  */
 class Product extends AbstractProduct
 {

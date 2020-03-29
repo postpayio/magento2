@@ -16,7 +16,7 @@ use Postpay\Serializers\Date;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ApiAdapter
+ * Postpay Api Adapter.
  */
 class ApiAdapter
 {

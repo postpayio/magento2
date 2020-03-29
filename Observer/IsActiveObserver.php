@@ -11,7 +11,7 @@ use Postpay\Payment\Gateway\Config\Config;
 use Postpay\Payment\Model\Postpay;
 
 /**
- * Class IsActiveObserver
+ * Check payment method availability.
  */
 class IsActiveObserver implements ObserverInterface
 {

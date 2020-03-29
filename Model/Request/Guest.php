@@ -8,7 +8,7 @@ namespace Postpay\Payment\Model\Request;
 use Magento\Quote\Model\Quote\Address;
 
 /**
- * Class Guest
+ * Add guest user information to checkout request.
  */
 class Guest
 {

@@ -10,7 +10,7 @@ use Magento\Framework\UrlInterface;
 use Postpay\Payment\Gateway\Config\Config;
 
 /**
- * Class ConfigProvider
+ * Retrieve config needed for checkout.
  */
 class ConfigProvider implements ConfigProviderInterface
 {

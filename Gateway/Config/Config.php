@@ -8,7 +8,7 @@ namespace Postpay\Payment\Gateway\Config;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
- * Class Config
+ * Payment gateway configuration.
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {

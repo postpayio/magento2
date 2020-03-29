@@ -11,7 +11,7 @@ use Magento\Framework\App\ObjectManager;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
- * Class Customer
+ * Add customer information to checkout request.
  */
 class Customer
 {

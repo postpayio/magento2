@@ -8,7 +8,7 @@ namespace Postpay\Payment\Model\Request;
 use Magento\Quote\Model\Quote\Address as QuoteAddress;
 
 /**
- * Class Address
+ * Add address information to checkout request.
  */
 class Address
 {

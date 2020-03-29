@@ -16,7 +16,7 @@ use Postpay\Exceptions\ApiException;
 use Postpay\Payment\Model\Postpay;
 
 /**
- * Class Capture
+ * Order capture controller.
  */
 class Capture extends Action
 {

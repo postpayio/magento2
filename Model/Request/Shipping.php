@@ -9,7 +9,7 @@ use Magento\Quote\Model\Quote\Address as QuoteAddress;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
- * Class Shipping
+ * Add shipping information to checkout request.
  */
 class Shipping
 {
