@@ -3,6 +3,8 @@
 ## 0.1.3
 
 * Added locales
+* Added observers to check payment method availability
+* Rendered widget if payment method is available
 
 ## 0.1.2
 
