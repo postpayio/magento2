@@ -8,13 +8,15 @@
  * @var \Postpay\Payment\Block\Widget\Product $block
  */
 
+use Magento\Framework\Json\Helper\Data;
+
 $config = [
     'merchantId' => $block->getmerchantId(),
     'sandbox' => $block->isSandbox()
 ];
 ?>
 
-<div data-mage-init='{"postpayWidget": <?= $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($config) ?>}'>
+<div data-mage-init='{"postpayWidget": <?= $this->helper(Data::class)->jsonEncode($config) ?>}'>
     <div
         class="postpay-widget"
         data-type="product"
