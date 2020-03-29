@@ -84,4 +84,15 @@ class Product extends AbstractProduct
     {
         return ApiAdapter::decimal($this->getProduct()->getFinalPrice());
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function _toHtml()
+    {
+        if ($this->config->isAvailable()) {
+            return parent::_toHtml();
+        }
+        return '';
+    }
 }
