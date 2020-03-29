@@ -20,7 +20,7 @@ $config = [
     <div
         class="postpay-widget"
         data-type="product"
-        data-amount="<?= echo $block->escapeHtmlAttr($block->getFinalPrice()->jsonSerialize()); ?>",
-        data-currency="<?= echo $block->escapeHtmlAttr($block->getCurrencyCode()); ?>"
+        data-amount="<?= $block->escapeHtmlAttr($block->getFinalPrice()->jsonSerialize()); ?>",
+        data-currency="<?= $block->escapeHtmlAttr($block->getCurrencyCode()); ?>"
     ></div>
 </div>
