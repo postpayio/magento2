@@ -85,6 +85,16 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
+     * Check if payment method is available field is enabled.
+     *
+     * @return bool
+     */
+    public function isAvailable()
+    {
+        return (bool) $this->isActive() && $this->getMerchantId() && $this->getSecretKey();
+    }
+
+    /**
      * Check if product widget is enabled.
      *
      * @param int|null $storeId
