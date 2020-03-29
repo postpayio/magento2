@@ -4,7 +4,7 @@
 
 # Postpay for Magento 2 
 
-[Postpay](https"//postpay.io) Payment Gateway for Magento 2.
+[Postpay](https://postpay.io) Payment Gateway for Magento 2.
 
 ## Installation
 
