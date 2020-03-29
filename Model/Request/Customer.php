@@ -21,6 +21,7 @@ class Customer
      * @param CustomerInterface $customer
      *
      * @return array
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function build(CustomerInterface $customer)
     {

@@ -18,6 +18,7 @@ class Address
      * @param QuoteAddress $address
      *
      * @return array
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function build(QuoteAddress $address)
     {

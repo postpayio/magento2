@@ -117,6 +117,7 @@ class ApiAdapter
      * @param float $value
      *
      * @return Decimal
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function decimal($value)
     {
@@ -129,6 +130,7 @@ class ApiAdapter
      * @param string $value
      *
      * @return Date
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function date($value)
     {
@@ -141,6 +143,7 @@ class ApiAdapter
      * @param string $value
      *
      * @return Date
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function datetime($value)
     {

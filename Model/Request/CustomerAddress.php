@@ -18,6 +18,7 @@ class CustomerAddress
      * @param Address $address
      *
      * @return array
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function build(Address $address)
     {

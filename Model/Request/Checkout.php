@@ -22,6 +22,7 @@ class Checkout
      * @param string $id
      *
      * @return array
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function build(Quote $quote, $id)
     {

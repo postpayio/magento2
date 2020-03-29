@@ -22,6 +22,7 @@ class Item
      * @param QuoteItem $item
      *
      * @return array
+     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function build(QuoteItem $item)
     {
