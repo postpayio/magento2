@@ -27,6 +27,12 @@
         </arguments>
     </type>
 
+    <type name="Postpay\Payment\Observer\IsActiveObserver">
+        <arguments>
+            <argument name="config" xsi:type="object">PostpayConfig</argument>
+        </arguments>
+    </type>
+
     <type name="Postpay\Payment\Block\Widget\Product">
         <arguments>
             <argument name="config" xsi:type="object">PostpayConfig</argument>
