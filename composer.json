@@ -21,8 +21,8 @@
         }
     ],
     "support": {
-        "source": "https://github.com/postpay.io/woocommerce",
-        "issues": "https://github.com/postpay.io/woocommerce/issues"
+        "source": "https://github.com/postpayio/magento2",
+        "issues": "https://github.com/postpayio/magento2/issues"
     },
     "repositories": [
         {
