@@ -10,7 +10,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Postpay\Payment\Model\Postpay;
 
 /**
- * Disabled payment method on admin site.
+ * Disable payment method on admin site.
  */
 class IsActiveAdminObserver implements ObserverInterface
 {
