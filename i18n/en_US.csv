@@ -1,6 +1,7 @@
 "Postpay checkout has been canceled.","Postpay checkout has been canceled."
 "Capture error. Id %1. Code: %2.","Capture error. Id %1. Code: %2."
 "Checkout error. Id: %1. Code: %2.","Checkout error. Id: %1. Code: %2."
+"Postpay is not properly configured.","Postpay is not properly configured."
 "Continue to Postpay","Continue to Postpay"
 Postpay,Postpay
 Enabled,Enabled
