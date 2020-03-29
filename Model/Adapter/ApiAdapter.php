@@ -6,6 +6,7 @@
 namespace Postpay\Payment\Model\Adapter;
 
 use DateTime;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\Method\Logger;
 use Postpay\Exceptions\ApiException;
 use Postpay\Payment\Gateway\Config\Config;
@@ -62,14 +63,17 @@ class ApiAdapter
         $this->config = $config;
         $this->logger = $logger;
         $this->customLogger = $customLogger;
-        $this->client = $this->postpayFactory->create([
-            'config' => [
-                'merchant_id' => $this->config->getMerchantId(),
-                'secret_key' => $this->config->getSecretKey(),
-                'sandbox' => $this->config->isSandbox(),
-                'client_handler' => 'guzzle'
-            ]
-        ]);
+
+        if ($this->config->isAvailable()) {
+            $this->client = $this->postpayFactory->create([
+                'config' => [
+                    'merchant_id' => $this->config->getMerchantId(),
+                    'secret_key' => $this->config->getSecretKey(),
+                    'sandbox' => $this->config->isSandbox(),
+                    'client_handler' => 'guzzle'
+                ]
+            ]);
+        }
     }
 
     /**
@@ -82,9 +86,14 @@ class ApiAdapter
      * @return array
      *
      * @throws ApiException
+     * @throws LocalizedException
      */
     public function request($method, $path, array $params = [])
     {
+        if ($this->client === null) {
+            throw new LocalizedException(__('Postpay is not properly configured.'));
+        }
+
         try {
             /** @var \Postpay\Http\Response $response */
             $response = $this->client->request($method, $path, $params);
