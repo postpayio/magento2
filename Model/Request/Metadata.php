@@ -28,7 +28,7 @@ class Metadata
         /** @var ModuleListInterface $moduleList */
         $moduleList = $objectManager->get(ModuleListInterface::class);
         $module = $moduleList->getOne('Postpay_Payment');
-        
+
         return [
             'php' => [
                 'version' => phpversion()

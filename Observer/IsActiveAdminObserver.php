@@ -21,7 +21,7 @@ class IsActiveAdminObserver implements ObserverInterface
     {
         $event = $observer->getEvent();
         $methodInstance = $event->getMethodInstance();
-        
+
         if ($methodInstance instanceof Postpay) {
             /** @var \Magento\Framework\DataObject $result */
             $result = $observer->getEvent()->getResult();
