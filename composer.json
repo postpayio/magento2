@@ -59,6 +59,9 @@
         ],
         "phpcbf": [
             "phpcbf -p"
+        ],
+        "fix": [
+            "php-cs-fixer fix ."
         ]
     }
 }
