@@ -11,8 +11,8 @@ use Magento\Payment\Model\Method\Logger;
 use Postpay\Exceptions\ApiException;
 use Postpay\Payment\Gateway\Config\Config;
 use Postpay\PostpayFactory;
-use Postpay\Serializers\Decimal;
 use Postpay\Serializers\Date;
+use Postpay\Serializers\Decimal;
 use Psr\Log\LoggerInterface;
 
 /**
