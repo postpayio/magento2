@@ -15,6 +15,10 @@ define([
         {
             type: 'postpay',
             component: 'Postpay_Payment/js/view/payment/method-renderer/postpay-method'
+        },
+        {
+            type: 'postpay_pay_now',
+            component: 'Postpay_Payment/js/view/payment/method-renderer/postpay-method'
         }
     );
     return Component.extend({});

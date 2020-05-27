@@ -3,7 +3,7 @@
  * Copyright © Postpay. All rights reserved.
  * See LICENSE for license details.
  */
-namespace Postpay\Payment\Model;
+namespace Postpay\Payment\Model\Method;
 
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -17,14 +17,13 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order\Payment\Transaction;
-use Postpay\Payment\Gateway\Config\Config;
 use Postpay\Payment\Model\Adapter\AdapterInterface;
 use Postpay\Serializers\Decimal;
 
 /**
- * Postpay payment method.
+ * Postpay payment method abstract class.
  */
-class Postpay extends AbstractMethod
+abstract class AbstractPostpayMethod extends AbstractMethod
 {
     /**
      * Postpay transaction ID key
@@ -32,9 +31,9 @@ class Postpay extends AbstractMethod
     const TRANSACTION_ID_KEY = 'postpay_id';
 
     /**
-     * @var string
+     * Number of instalments
      */
-    protected $_code = Config::CODE;
+    const NUM_INSTALMENTS = null;
 
     /**
      * Payment Method feature

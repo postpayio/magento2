@@ -5,15 +5,15 @@
 var config = {
     map: {
         '*': {
-            postpayWidget: 'Postpay_Payment/js/widget'
+            postpayUi: 'Postpay_Payment/js/view/ui'
         }
     },
     shim: {
-        postpayjs : {
+        'postpay-js' : {
             'exports': 'postpay'
         }
     },
     paths: {
-        postpayjs: 'https://cdn.postpay.io/v1/js/postpay'
+        'postpay-js': 'https://cdn.postpay.io/v1/js/postpay'
     }
 };

@@ -8,16 +8,18 @@ namespace Postpay\Payment\Controller\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Webapi\Exception;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Postpay\Exceptions\ApiException;
 use Postpay\Payment\Model\Adapter\AdapterInterface;
-use Postpay\Payment\Model\Postpay;
-use Postpay\Payment\Model\Request\Checkout;
+use Postpay\Payment\Model\Method\AbstractPostpayMethod;
+use Postpay\Payment\Model\Request\Checkout as CheckoutRequest;
 
 /**
- * Provide redirect to Postpay checkout.
+ * Create a Postpay checkout.
  */
-class Redirect extends Action
+class Checkout extends Action
 {
     /**
      * @var Session
@@ -63,23 +65,22 @@ class Redirect extends Action
         $quote = $this->checkoutSession->getQuote();
         $quote->collectTotals()->reserveOrderId();
         $id = $quote->getReservedOrderId() . '-' . uniqid();
+        /** @var \Magento\Quote\Model\Quote\Payment $payment */
+        $payment = $quote->getPayment();
+        /** @var \Magento\Framework\Controller\Result\Json $resultJson */
+        $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
 
         try {
             $response = $this->postpayAdapter->checkout(
-                Checkout::build($quote, $id)
+                CheckoutRequest::build($quote, $id, $payment->getMethodInstance())
             );
         } catch (ApiException $e) {
-            $this->messageManager->addErrorMessage(
-                __('Checkout error. Id: %1. Code: %2.', $id, $e->getErrorCode())
-            );
-            $this->_redirect('checkout/cart');
-            return;
+            $resultJson->setHttpResponseCode(Exception::HTTP_BAD_REQUEST);
+            return $resultJson->setData(['message' => $e->getMessage()]);
         }
-        /** @var \Magento\Quote\Model\Quote\Payment $payment */
-        $payment = $quote->getPayment();
-        $payment->setAdditionalInformation(Postpay::TRANSACTION_ID_KEY, $id);
-
+        $payment->setAdditionalInformation(AbstractPostpayMethod::TRANSACTION_ID_KEY, $id);
         $this->quoteRepository->save($quote);
-        $this->getResponse()->setRedirect($response['redirect_url']);
+
+        return $resultJson->setData($response);
     }
 }

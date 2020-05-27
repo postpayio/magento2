@@ -8,5 +8,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_is_active">
         <observer name="postpay_payment_payment_method_is_active" instance="Postpay\Payment\Observer\IsActiveAdminObserver"/>
+        <observer name="postpay_pay_now_payment_payment_method_is_active" instance="Postpay\Payment\Observer\IsActiveAdminObserver"/>
     </event>
 </config>

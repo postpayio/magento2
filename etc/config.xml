@@ -10,18 +10,32 @@
         <payment>
             <postpay>
                 <active>0</active>
-                <model>Postpay\Payment\Model\Postpay</model>
+                <model>Postpay\Payment\Model\Method\SplitPayment</model>
                 <payment_action>authorize_capture</payment_action>
-                <title>Postpay</title>
+                <title>Instalments with Postpay</title>
                 <sandbox>0</sandbox>
                 <merchant_id/>
                 <secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <sandbox_secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
-                <product_widget>0</product_widget>
-                <allowspecific>0</allowspecific>
-                <sort_order>0</sort_order>
+                <in_context>1</in_context>
+                <theme>light</theme>
                 <debug>0</debug>
+                <allowspecific>0</allowspecific>
+                <product_widget>1</product_widget>
+                <cart_widget>1</cart_widget>
+                <summary_widget>1</summary_widget>
+                <sort_order>0</sort_order>
             </postpay>
+            <postpay_pay_now>
+                <active>0</active>
+                <model>Postpay\Payment\Model\Method\PayNow</model>
+                <payment_action>authorize_capture</payment_action>
+                <title>Credit or Debit Card</title>
+                <debug>0</debug>
+                <allowspecific>0</allowspecific>
+                <summary_widget>1</summary_widget>
+                <sort_order>0</sort_order>
+            </postpay_pay_now>
         </payment>
     </default>
 </config>

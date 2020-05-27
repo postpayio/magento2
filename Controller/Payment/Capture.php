@@ -13,7 +13,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Quote\Api\CartManagementInterface;
 use Postpay\Exceptions\ApiException;
-use Postpay\Payment\Model\Postpay;
+use Postpay\Payment\Model\Method\AbstractPostpayMethod;
 
 /**
  * Order capture controller.
@@ -72,13 +72,13 @@ class Capture extends Action
         $quote = $this->checkoutSession->getQuote();
         /** @var \Magento\Quote\Model\Quote\Payment $payment */
         $payment = $quote->getPayment();
-        $id = $payment->getAdditionalInformation(Postpay::TRANSACTION_ID_KEY);
+        $id = $payment->getAdditionalInformation(AbstractPostpayMethod::TRANSACTION_ID_KEY);
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
         if ($id) {
-            if (!$this->customerSession->isLoggedIn()
-                && $this->checkoutHelper->isAllowedGuestCheckout($quote)) {
+            if (!$this->customerSession->isLoggedIn() &&
+                $this->checkoutHelper->isAllowedGuestCheckout($quote)) {
                 $quote->setCheckoutMethod(CartManagementInterface::METHOD_GUEST);
             }
 

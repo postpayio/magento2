@@ -8,13 +8,18 @@ namespace Postpay\Payment\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Postpay\Payment\Gateway\Config\Config;
-use Postpay\Payment\Model\Postpay;
+use Postpay\Payment\Model\Method\AbstractPostpayMethod;
 
 /**
  * Check payment method availability.
  */
 class IsActiveObserver implements ObserverInterface
 {
+    /**
+     * @var Config
+     */
+    private $config;
+
     /**
      * Constructor.
      *
@@ -33,7 +38,7 @@ class IsActiveObserver implements ObserverInterface
         $event = $observer->getEvent();
         $methodInstance = $event->getMethodInstance();
 
-        if ($methodInstance instanceof Postpay && !$this->config->isAvailable()) {
+        if ($methodInstance instanceof AbstractPostpayMethod && !$this->config->isAvailable()) {
             /** @var \Magento\Framework\DataObject $result */
             $result = $observer->getEvent()->getResult();
             $result->setData('is_available', false);

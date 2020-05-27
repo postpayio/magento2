@@ -9,7 +9,7 @@
     <body>
         <referenceContainer name="product.info.main">
             <block class="Postpay\Payment\Block\Widget\Product"
-                   name="postpay.widget.product.after.price"
+                   name="postpay.widget.product"
                    template="Postpay_Payment::widget/product.phtml"
                    ifconfig="payment/postpay/product_widget"
                    after="product.info.price"/>

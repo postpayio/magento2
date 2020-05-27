@@ -5,16 +5,16 @@
  */
 namespace Postpay\Payment\Block\Widget;
 
-use Magento\Catalog\Block\Product\AbstractProduct;
-use Magento\Catalog\Block\Product\Context;
+use Magento\Checkout\Model\Cart as CustomerCart;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Framework\View\Element\Template;
 use Postpay\Payment\Gateway\Config\Config;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
 /**
- * Product widget block.
+ * Cart widget block.
  */
-class Product extends AbstractProduct
+class Cart extends Template
 {
     /**
      * @var Config
@@ -22,38 +22,34 @@ class Product extends AbstractProduct
     private $config;
 
     /**
+     * @var CustomerCart
+     */
+    protected $cart;
+
+    /**
      * @var PriceCurrencyInterface
      */
     private $priceCurrency;
 
     /**
-     * Constructor.
-     *
-     * @param Context $context
-     * @param Config $config
+     * @param Template\Context $context
+     * @param Config $paypalConfig
+     * @param CustomerCart $cart
      * @param PriceCurrencyInterface $priceCurrency
      * @param array $data
      */
     public function __construct(
-        Context $context,
+        Template\Context $context,
         Config $config,
+        CustomerCart $cart,
         PriceCurrencyInterface $priceCurrency,
         array $data = []
     ) {
         parent::__construct($context, $data);
 
         $this->config = $config;
+        $this->cart = $cart;
         $this->priceCurrency = $priceCurrency;
-    }
-
-    /**
-     * Get Ui parameters.
-     *
-     * @return array
-     */
-    public function getUiParams()
-    {
-        return $this->config->getUiParams();
     }
 
     /**
@@ -67,13 +63,14 @@ class Product extends AbstractProduct
     }
 
     /**
-     * Get product final price.
+     * Get cart subtotal.
      *
      * @return int
      */
-    public function getFinalPrice()
+    public function getSubtotal()
     {
-        return ApiAdapter::decimal($this->getProduct()->getFinalPrice());
+        $totals = $this->cart->getQuote()->getTotals();
+        return ApiAdapter::decimal($totals['subtotal']['value']);
     }
 
     /**

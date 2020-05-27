@@ -4,14 +4,29 @@
  * See LICENSE for license details.
  */
 -->
-<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+<div class="payment-method" data-bind="
+                            attr: {'id': getId()},
+                            css: {'_active': (getCode() == isChecked())}
+                            ">
+
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
                class="radio"
-               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
-        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+               data-bind="
+               attr: {'id': getCode()},
+               value: getCode(),
+               checked: isChecked,
+               click: selectPaymentMethod,
+               visible: isRadioButtonVisible()
+               "/>
+
+        <label class="label" data-bind="attr: {'for': getCode()}">
+            <img class="payment-icon" data-bind="attr: {src: getIcon(), alt: $t('Postpay payment')}"/>
+            <span text="getTitle()"></span>
+        </label>
     </div>
+
     <div class="payment-method-content">
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
@@ -26,6 +41,24 @@
                 <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
+
+        <!-- ko if: (summaryWidgetEnabled())-->
+        <div class="postpay-widget"
+             data-type="payment-summary"
+             data-bind="
+             attr: {
+                 'data-amount': getTotal(),
+                 'data-currency': getCurrency(),
+                 'data-country': getCountry(),
+                 'data-num-instalments': getNumInstalments(),
+                 'data-hide-if-invalid': '#' + getId()
+             },
+             style: {'margin-bottom': '5px'},
+             afterRender: initUi
+             ">
+        </div>
+        <!--/ko-->
+
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
@@ -37,7 +70,7 @@
                         enable: (getCode() == isChecked())
                         "
                         disabled>
-                    <span data-bind="i18n: 'Continue to Postpay'"></span>
+                    <span text="getButtonText()"></span>
                 </button>
             </div>
         </div>

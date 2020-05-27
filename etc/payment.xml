@@ -10,5 +10,8 @@
         <method name="postpay">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="postpay_pay_now">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
     </methods>
 </payment>

@@ -4,16 +4,20 @@
  */
 define([
     'jquery',
-    'postpayjs'
+    'postpay-js'
 ], function ($, postpay) {
     'use strict';
 
-    $.widget('mage.postpayWidget', {
+    var config = window.checkoutConfig;
+
+    $.widget('mage.postpayUi', {
+        options: config && config.payment.postpay.uiParams,
+
         /** @inheritdoc */
         _create: function () {
             postpay.init(this.options);
         }
     });
 
-    return $.mage.postpayWidget;
+    return $.mage.postpayUi;
 });

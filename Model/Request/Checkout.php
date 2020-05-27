@@ -7,6 +7,7 @@ namespace Postpay\Payment\Model\Request;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Model\Quote;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
 
@@ -24,7 +25,7 @@ class Checkout
      * @return array
      * phpcs:disable Magento2.Functions.StaticFunction
      */
-    public static function build(Quote $quote, $id)
+    public static function build(Quote $quote, $id, MethodInterface $method)
     {
         $billing = $quote->getBillingAddress();
         $shipping = $quote->getShippingAddress();
@@ -51,7 +52,8 @@ class Checkout
                 'confirmation_url' => self::getUrl('postpay/payment/capture'),
                 'cancel_url' => self::getUrl('postpay/payment/cancel')
             ],
-            'metadata' => Metadata::build()
+            'metadata' => Metadata::build($method),
+            'num_instalments' => $method::NUM_INSTALMENTS
         ];
     }
 
