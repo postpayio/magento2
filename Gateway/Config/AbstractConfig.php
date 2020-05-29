@@ -16,21 +16,6 @@ abstract class AbstractConfig extends \Magento\Payment\Gateway\Config\Config
     const KEY_SUMMARY_WIDGET = 'summary_widget';
 
     /**
-     * Constructor.
-     *
-     * @param ScopeConfigInterface $scopeConfig
-     * @param null|string $methodCode
-     * @param string $pathPattern
-     */
-    public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        $methodCode = null,
-        $pathPattern = self::DEFAULT_PATH_PATTERN
-    ) {
-        parent::__construct($scopeConfig, $methodCode, $pathPattern);
-    }
-
-    /**
      * Get payment configuration status.
      *
      * @param int|null $storeId
