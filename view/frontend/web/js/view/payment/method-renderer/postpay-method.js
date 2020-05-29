@@ -9,7 +9,6 @@ define([
     'Magento_Checkout/js/model/payment/additional-validators',
     'Magento_Checkout/js/model/place-order',
     'Magento_Checkout/js/model/quote',
-    'Magento_Ui/js/model/messageList',
     'Postpay_Payment/js/action/set-payment-method',
     'postpay-js',
     'mage/translate'
@@ -20,7 +19,6 @@ define([
     additionalValidators,
     placeOrderService,
     quote,
-    messageList,
     setPaymentMethodAction,
     postpay,
     $t
@@ -31,6 +29,7 @@ define([
 
     return Component.extend({
         defaults: {
+            totals: quote.totals(),
             template: 'Postpay_Payment/payment/postpay'
         },
 
@@ -67,7 +66,7 @@ define([
          * @returns {Integer}
          */
         getTotal: function () {
-            return parseInt(quote.totals().base_grand_total * 100);
+            return Math.round(this.totals.grand_total * 100);
         },
 
         /**
@@ -76,7 +75,7 @@ define([
          * @returns {String}
          */
         getCurrency: function () {
-            return quote.totals().quote_currency_code;
+            return this.totals.quote_currency_code;
         },
 
         /**
@@ -85,7 +84,7 @@ define([
          * @returns {String}
          */
         getCountry: function () {
-            return quote.shippingAddress().countryId;
+            return quote.billingAddress().countryId;
         },
 
         /**
@@ -143,7 +142,7 @@ define([
                             self.checkout(response);
                         })
                         .fail(function (response) {
-                            messageList.addErrorMessage(response);
+                            self.messageContainer.addErrorMessage(response.message);
                         });
                     }
                 );
