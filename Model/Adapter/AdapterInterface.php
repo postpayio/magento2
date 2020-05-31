@@ -10,7 +10,6 @@ namespace Postpay\Payment\Model\Adapter;
  *
  * Sends HTTP requests via a proper adapter.
  */
-
 interface AdapterInterface
 {
     /**
