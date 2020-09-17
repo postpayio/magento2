@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+* Added Pay Now method
+* Added cart widget
+* Added payment summary widget
+* Added in-context checkout
+
 ## 0.1.3
 
 * Added locales
