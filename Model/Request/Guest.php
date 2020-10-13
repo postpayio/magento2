@@ -24,8 +24,8 @@ class Guest
     {
         return [
             'email' => $address->getEmail(),
-            'first_name' => $address->getFirstname(),
-            'last_name' => $address->getLastname(),
+            'first_name' => $address->getFirstname() ?: '',
+            'last_name' => $address->getLastname() ?: '',
             'account' => 'guest'
         ];
     }

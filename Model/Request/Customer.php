@@ -40,8 +40,8 @@ class Customer
         $data = [
             'email' => $customer->getEmail(),
             'id' => $customer->getId(),
-            'first_name' => $customer->getFirstname(),
-            'last_name' => $customer->getLastname(),
+            'first_name' => $customer->getFirstname() ?: '',
+            'last_name' => $customer->getLastname() ?: '',
             'gender' => $gender,
             'account' => 'existing'
         ];
