@@ -9,6 +9,7 @@ define([
     'Magento_Checkout/js/model/payment/additional-validators',
     'Magento_Checkout/js/model/place-order',
     'Magento_Checkout/js/model/quote',
+    'Magento_Customer/js/model/customer',
     'Postpay_Payment/js/action/set-payment-method',
     'postpay-js',
     'mage/translate'
@@ -19,6 +20,7 @@ define([
     additionalValidators,
     placeOrderService,
     quote,
+    customer,
     setPaymentMethodAction,
     postpay,
     $t
@@ -135,9 +137,14 @@ define([
             if (additionalValidators.validate()) {
                 this.selectPaymentMethod();
                 var self = this;
+                var payload = {};
+
+                if (!customer.isLoggedIn()) {
+                    payload['email'] = quote.guestEmail;
+                }
 
                 setPaymentMethodAction(this.messageContainer).done(function () {
-                    placeOrderService(config.postpay.checkoutUrl, {}, self.messageContainer)
+                    placeOrderService(config.postpay.checkoutUrl, payload, self.messageContainer)
                         .done(function (response) {
                             self.checkout(response);
                         })
