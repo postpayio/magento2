@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+* Added guest email to placeOrder payload
+* Allowed null for first_name and last_name
+
 ## 0.2.0
 
 * Added Pay Now method
