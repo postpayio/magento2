@@ -42,7 +42,6 @@
             <!--/ko-->
         </div>
 
-        <!-- ko if: (summaryWidgetEnabled())-->
         <div class="postpay-widget"
              data-type="payment-summary"
              data-bind="
@@ -54,10 +53,10 @@
                  'data-hide-if-invalid': '#' + getId()
              },
              style: {'margin-bottom': '5px'},
+             visible: summaryWidgetEnabled(),
              afterRender: initUi
              ">
         </div>
-        <!--/ko-->
 
         <div class="actions-toolbar">
             <div class="primary">
