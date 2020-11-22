@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+* Removed knockout rule in favor of visible option
+
 ## 0.2.1
 
 * Added guest email to placeOrder payload
