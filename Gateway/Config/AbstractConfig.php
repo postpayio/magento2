@@ -5,8 +5,6 @@
  */
 namespace Postpay\Payment\Gateway\Config;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-
 /**
  * Configuration abstract class.
  */
