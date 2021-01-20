@@ -5,6 +5,9 @@
  */
 namespace Postpay\Payment\Gateway\Config;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+
 /**
  * Payment gateway configuration.
  */
@@ -18,6 +21,27 @@ class Config extends AbstractConfig
     const KEY_SANDBOX = 'sandbox';
     const KEY_THEME = 'theme';
     const KEY_IN_CONTEXT = 'in_context';
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * Constructor.
+     *
+     * @param ScopeConfigInterface $scopeConfig
+     * @param string|null $methodCode
+     * @param string $pathPattern
+     */
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        $methodCode = null,
+        $pathPattern = self::DEFAULT_PATH_PATTERN
+    ) {
+        $this->scopeConfig = $scopeConfig;
+        parent::__construct($scopeConfig, $methodCode, $pathPattern);
+    }
 
     /**
      * Get merchant ID.
@@ -99,7 +123,12 @@ class Config extends AbstractConfig
         return [
             'merchantId' => $this->getMerchantId($storeId),
             'sandbox' => $this->isSandbox($storeId),
-            'theme' => $this->getTheme($storeId)
+            'theme' => $this->getTheme($storeId),
+            'locale' => $this->scopeConfig->getValue(
+                'general/locale/code',
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            )
         ];
     }
 }
