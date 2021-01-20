@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+* Added locale parameter
+
 ## 0.2.2
 
 * Removed knockout rule in favor of visible option
