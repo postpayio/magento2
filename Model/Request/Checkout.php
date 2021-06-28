@@ -41,7 +41,7 @@ class Checkout
             'total_amount' => ApiAdapter::decimal($quote->getBaseGrandTotal()),
             'tax_amount' => ApiAdapter::decimal($shipping->getBaseTaxAmount()),
             'currency' => $quote->getBaseCurrencyCode(),
-            'shipping' => Shipping::build($shipping),
+            'shipping' => $quote->isVirtual() ? null : Shipping::build($shipping),
             'billing_address' => Address::build($billing),
             'customer' => $customer,
             'items' => array_map(
