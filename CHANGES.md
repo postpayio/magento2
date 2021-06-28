@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+
+* Added support for virtual items
+
 ## 0.2.3
 
 * Added locale parameter
