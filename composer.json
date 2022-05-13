@@ -33,7 +33,7 @@
     "require": {
         "magento/framework": "^101.0.0|^102.0.0|^103.0.0",
         "postpay/postpay-php": "~0.0.4",
-        "guzzlehttp/guzzle": "^6.0|^7.4"
+        "guzzlehttp/guzzle": ">=6.0"
     },
     "require-dev": {
         "magento/magento-coding-standard": "*",
