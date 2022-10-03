@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Postpay_Payment::css/one.css" />
+    </head>
+    <referenceContainer name="content">
+        <block class="Postpay\Payment\Block\Widget\Product" name="postpay_payment_one" template="Postpay_Payment::widget/one.phtml" cacheable="false"/>
+    </referenceContainer>
+</page>

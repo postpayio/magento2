@@ -14,5 +14,10 @@
                    ifconfig="payment/postpay/product_widget"
                    after="product.info.price"/>
         </referenceContainer>
+        <referenceBlock name="product.info">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Postpay_Payment::widget/form.phtml</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>

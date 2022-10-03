@@ -10,6 +10,7 @@ use Magento\Catalog\Block\Product\Context;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Postpay\Payment\Gateway\Config\Config;
 use Postpay\Payment\Model\Adapter\ApiAdapter;
+use Magento\Customer\Model\Session;
 
 /**
  * Product widget block.
@@ -32,18 +33,21 @@ class Product extends AbstractProduct
      * @param Context $context
      * @param Config $config
      * @param PriceCurrencyInterface $priceCurrency
+     * @param Session $customerSession
      * @param array $data
      */
     public function __construct(
         Context $context,
         Config $config,
         PriceCurrencyInterface $priceCurrency,
+        Session $customerSession,
         array $data = []
     ) {
         parent::__construct($context, $data);
 
         $this->config = $config;
         $this->priceCurrency = $priceCurrency;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -85,5 +89,45 @@ class Product extends AbstractProduct
             return parent::_toHtml();
         }
         return '';
+    }
+
+    /**
+     * Get MerchantId
+     *
+     * @return string
+     */
+    public function getMerchantId()
+    {
+        return $this->config->getMerchantId();
+    }
+
+    /**
+     * Get MaskedCartId
+     *
+     * @return string
+     */
+    public function getMaskedCartId()
+    {
+        return $this->getRequest()->getParam('cart');
+    }
+
+    /**
+     * Get userId if loggedin
+     *
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->customerSession->getCustomer()->getId() ?: false;
+    }
+
+    /**
+     * Check if express checkout(one) is enabled
+     *
+     * @return string
+     */
+    public function isOneEnabled()
+    {
+        return $this->config->isOneEnabled();
     }
 }

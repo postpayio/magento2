@@ -56,5 +56,7 @@
             <argument name="config" xsi:type="object">PostpayConfig</argument>
             <argument name="payNowConfig" xsi:type="object">PostpayPayNowConfig</argument>
         </arguments>
-    </type>  
+    </type>
+    <preference for="Postpay\Payment\Api\PlaceOrderInterface" type="Postpay\Payment\Model\Api\PlaceOrder"/>
+    <preference for="Magento\Checkout\Controller\Cart\Add" type="Postpay\Payment\Controller\Cart\Add"/>
 </config>

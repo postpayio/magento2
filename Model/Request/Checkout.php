@@ -25,7 +25,7 @@ class Checkout
      * @return array
      * phpcs:disable Magento2.Functions.StaticFunction
      */
-    public static function build(Quote $quote, $id, MethodInterface $method)
+    public static function build(Quote $quote, $id, MethodInterface $method, $type="default")
     {
         $billing = $quote->getBillingAddress();
         $shipping = $quote->getShippingAddress();
@@ -35,6 +35,10 @@ class Checkout
         } else {
             $customer = Guest::build($billing);
         }
+        $items = array_map(
+            'Postpay\Payment\Model\Request\Item::build',
+            $quote->getAllVisibleItems()
+        );
 
         return [
             'order_id' => $id,
@@ -44,16 +48,14 @@ class Checkout
             'shipping' => $quote->isVirtual() ? null : Shipping::build($shipping),
             'billing_address' => Address::build($billing),
             'customer' => $customer,
-            'items' => array_map(
-                'Postpay\Payment\Model\Request\Item::build',
-                $quote->getAllVisibleItems()
-            ),
+            'items' => $items,
             'merchant' => [
-                'confirmation_url' => self::getUrl('postpay/payment/capture'),
-                'cancel_url' => self::getUrl('postpay/payment/cancel')
+                'confirmation_url' => $type === "default" ? self::getUrl('postpay/payment/capture') : self::getUrl('sales/guest/form'),
+                'cancel_url' => $type === "default" ? self::getUrl('postpay/payment/cancel') : reset($items)['url'],
             ],
             'metadata' => Metadata::build($method),
-            'num_instalments' => $method::NUM_INSTALMENTS
+            'num_instalments' => $method::NUM_INSTALMENTS,
+            'checkout_type' => $type
         ];
     }
 

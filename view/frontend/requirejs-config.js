@@ -5,7 +5,8 @@
 var config = {
     map: {
         '*': {
-            postpayUi: 'Postpay_Payment/js/view/ui'
+            postpayUi: 'Postpay_Payment/js/view/ui',
+            postpayOne: 'Postpay_Payment/js/view/one',
         }
     },
     shim: {

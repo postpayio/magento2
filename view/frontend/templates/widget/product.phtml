@@ -15,7 +15,7 @@ use Magento\Framework\Json\Helper\Data;
 <div data-mage-init='{"postpayUi": <?= $this->helper(Data::class)->jsonEncode($block->getUiParams()) ?>}'>
     <div class="postpay-widget"
          data-type="product"
-         data-amount="<?= $block->escapeHtmlAttr($block->getFinalPrice()->jsonSerialize()); ?>",
+         data-amount="<?= $block->escapeHtmlAttr($block->getFinalPrice()->jsonSerialize()); ?>"
          data-currency="<?= $block->escapeHtmlAttr($block->getCurrencyCode()); ?>">
     </div>
 </div>

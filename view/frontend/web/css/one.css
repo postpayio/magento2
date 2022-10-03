@@ -1,0 +1,4 @@
+.postpay-payment-one {
+    filter: opacity(0%);
+    background-image: linear-gradient(to right, #00ffc1 0%, #00f3cb 9%, #00d6e6 25%, #00bcff 38%, #a63aff 67%, #ff3dbe 100%) !important;
+}

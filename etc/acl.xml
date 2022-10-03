@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Postpay_Payment::APIs" title="PostPay payment APIs"
+                          translate="title" sortOrder="110">
+                    <resource id="Postpay_Payment::checkout" title="Checkout"
+                              translate="title" sortOrder="10" />
+                    <resource id="Postpay_Payment::capture" title="Capture Payment"
+                              translate="title" sortOrder="20" />
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

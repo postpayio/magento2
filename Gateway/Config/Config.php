@@ -21,6 +21,7 @@ class Config extends AbstractConfig
     const KEY_SANDBOX = 'sandbox';
     const KEY_THEME = 'theme';
     const KEY_IN_CONTEXT = 'in_context';
+    const KEY_ONE_CHECKOUT = 'one_checkout';
 
     /**
      * @var ScopeConfigInterface
@@ -77,6 +78,18 @@ class Config extends AbstractConfig
     public function isSandbox($storeId = null)
     {
         return (bool) $this->getValue(self::KEY_SANDBOX, $storeId);
+    }
+
+    /**
+     * Check if checkout with one is enabled.
+     *
+     * @param int|null $storeId
+     *
+     * @return bool
+     */
+    public function isOneEnabled($storeId = null)
+    {
+        return (bool) $this->getValue(self::KEY_ONE_CHECKOUT, $storeId);
     }
 
     /**
