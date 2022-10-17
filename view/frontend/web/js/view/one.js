@@ -10,7 +10,7 @@ define(['jquery'], function($){
             let cart = config.cart;
             let cid =  config.cid;
 
-            let url = "https://checkout-dev.postpay.io/one/?currency="+currency+"&merchantid="+merchantid+"&cart="+cart;
+            let url = "https://checkout-dev.postpay.io/one/?currency="+currency+"&merchantid="+merchantid+"&cart="+cart+"&platform=magento";
             if (cid != null) {
                 url += "&cid=" + cid;
             }
